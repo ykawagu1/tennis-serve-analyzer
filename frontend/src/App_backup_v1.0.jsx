@@ -19,8 +19,7 @@ import {
   Sparkles,
   BookOpen,
   Calendar,
-  Brain,
-  MessageCircle
+  Brain
 } from 'lucide-react';
 import './App.css';
 
@@ -37,7 +36,6 @@ function App() {
   const [apiKey, setApiKey] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
   const [useChatGPT, setUseChatGPT] = useState(false);
-  const [userConcerns, setUserConcerns] = useState(''); // 新機能：気になっていること
   const fileInputRef = useRef(null);
 
   const steps = [
@@ -174,7 +172,6 @@ function App() {
       const formData = new FormData();
       formData.append('video', selectedFile);
       formData.append('use_chatgpt', useChatGPT ? 'true' : 'false');
-      formData.append('user_concerns', userConcerns); // 新機能：気になっていることを送信
       if (useChatGPT && apiKey) {
         formData.append('api_key', apiKey);
       }
@@ -223,7 +220,6 @@ function App() {
     setError(null);
     setCurrentStep(1);
     setUploadProgress(0);
-    setUserConcerns(''); // 新機能：気になっていることもリセット
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -423,30 +419,6 @@ function App() {
                 />
               </div>
 
-              {/* 新機能：気になっていること入力欄 */}
-              <div className="mt-8 bg-orange-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-orange-800 mb-3 flex items-center">
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  気になっていること（任意）
-                </h3>
-                <textarea
-                  value={userConcerns}
-                  onChange={(e) => setUserConcerns(e.target.value)}
-                  placeholder="例：トスが安定しない、フォームが崩れる、パワーが出ない、サーブの精度が悪い等..."
-                  className="w-full px-4 py-3 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
-                  rows={3}
-                  maxLength={200}
-                />
-                <div className="flex justify-between items-center mt-2">
-                  <p className="text-sm text-orange-600">
-                    記入いただくと、あなたの悩みに特化したワンポイントアドバイスも生成されます
-                  </p>
-                  <span className="text-xs text-orange-500">
-                    {userConcerns.length}/200
-                  </span>
-                </div>
-              </div>
-
               {/* 撮影のコツ */}
               <div className="mt-8 bg-blue-50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-blue-800 mb-3 flex items-center">
@@ -478,22 +450,13 @@ function App() {
                 <Play className="w-16 h-16 text-green-500 mx-auto mb-4" />
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">解析準備完了</h2>
                 <p className="text-gray-600">選択されたファイル: {selectedFile.name}</p>
-                {userConcerns && (
-                  <div className="mt-4 bg-orange-50 rounded-lg p-4">
-                    <p className="text-sm text-orange-800 font-medium">気になっていること:</p>
-                    <p className="text-orange-700 mt-1">{userConcerns}</p>
-                  </div>
-                )}
               </div>
 
               {isAnalyzing ? (
                 <div className="text-center">
                   <Loader2 className="w-12 h-12 text-blue-500 mx-auto mb-4 animate-spin" />
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">解析中...</h3>
-                  <p className="text-gray-600 mb-4">
-                    {userConcerns ? 'あなたの悩みに特化したアドバイスも含めて解析しています。' : '動画を解析しています。'}
-                    しばらくお待ちください。
-                  </p>
+                  <p className="text-gray-600 mb-4">動画を解析しています。しばらくお待ちください。</p>
                   
                   {uploadProgress > 0 && (
                     <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
@@ -536,132 +499,137 @@ function App() {
                 <div className="flex items-center justify-center space-x-8 mb-6">
                   <div className="text-center">
                     <div className="text-4xl font-bold text-blue-600 mb-2">
-                      {analysisResult.total_score ? analysisResult.total_score.toFixed(1) : '7.5'}
+                      {analysisResult.total_score?.toFixed(1) || '0.0'}
                     </div>
                     <div className="text-gray-600">総合スコア</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-green-600 mb-2">
-                      {analysisResult.frame_count || 100}
+                    <div className="text-2xl font-semibold text-green-600 mb-2">
+                      {analysisResult.frame_count || 0}
                     </div>
                     <div className="text-gray-600">解析フレーム数</div>
                   </div>
                 </div>
               </div>
 
-              {/* 新機能：ワンポイントアドバイス */}
-              {userConcerns && analysisResult.advice?.one_point_advice && (
-                <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg shadow-lg p-8">
-                  <div className="flex items-center mb-4">
-                    <MessageCircle className="w-8 h-8 text-orange-600 mr-3" />
-                    <h2 className="text-2xl font-bold text-orange-800">あなたへのワンポイントアドバイス</h2>
-                  </div>
-                  <div className="bg-white rounded-lg p-6 border-l-4 border-orange-500">
-                    <h3 className="text-lg font-semibold text-orange-800 mb-3">
-                      「{userConcerns}」について
-                    </h3>
-                    <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                      {analysisResult.advice.one_point_advice}
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* フェーズ別解析 */}
-              {analysisResult.phase_analysis && (
-                <div className="bg-white rounded-lg shadow-lg p-8">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                    <BarChart3 className="w-8 h-8 text-blue-600 mr-3" />
-                    フェーズ別解析
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {Object.entries(analysisResult.phase_analysis).map(([phase, data]) => (
-                      <div key={phase} className="bg-gray-50 rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">{phase}</h3>
-                        <div className="flex items-center mb-3">
-                          <div className="text-2xl font-bold text-blue-600 mr-2">
-                            {data.score ? data.score.toFixed(1) : '7.0'}
-                          </div>
-                          <div className="text-gray-600">/10</div>
-                        </div>
-                        {data.feedback && (
-                          <p className="text-gray-700 text-sm">{data.feedback}</p>
-                        )}
+              <div className="bg-white rounded-lg shadow-lg p-8">
+                <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                  <BarChart3 className="w-5 h-5 mr-3 text-blue-600" />
+                  フェーズ別解析
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {analysisResult.phase_analysis && Object.entries(analysisResult.phase_analysis).map(([phase, data]) => (
+                    <div key={phase} className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-semibold text-gray-800">{phase}</h4>
+                        <span className="text-lg font-bold text-blue-600">
+                          {data.score?.toFixed(1) || '0.0'}
+                        </span>
                       </div>
-                    ))}
-                  </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${(data.score || 0) * 10}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
 
-              {/* AI詳細アドバイス */}
-              {analysisResult.advice && (analysisResult.advice.enhanced || analysisResult.advice.detailed_advice) && (
-                <div className="bg-white rounded-lg shadow-lg p-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-                      <Brain className="w-8 h-8 text-purple-600 mr-3" />
-                      AI詳細解析レポート
-                    </h2>
-                    {analysisResult.advice.enhanced && (
-                      <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
-                        GPT-4o生成
-                      </span>
-                    )}
-                  </div>
-                  
-                  {analysisResult.advice.error && (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                      <div className="flex items-start">
-                        <AlertCircle className="w-5 h-5 text-yellow-500 mr-3 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <h4 className="text-yellow-800 font-medium">ChatGPT接続エラー</h4>
-                          <p className="text-yellow-700 text-sm mt-1">{analysisResult.advice.error}</p>
-                          <p className="text-yellow-700 text-sm mt-1">基本アドバイスを表示しています。</p>
-                        </div>
-                      </div>
+                {/* AIアドバイス */}
+              <div className="bg-white rounded-lg shadow-lg p-8">
+                <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                  <Brain className="w-5 h-5 mr-3 text-purple-600" />
+                  AIアドバイス
+                </h3>
+                
+                <div className="space-y-6">
+                  {/* 詳細アドバイス（Markdown形式） */}
+                  {analysisResult.advice?.detailed_advice && (
+                    <div className="prose max-w-none">
+                      <div 
+                        className="text-gray-700 leading-relaxed"
+                        dangerouslySetInnerHTML={{
+                          __html: analysisResult.advice.detailed_advice
+                            .replace(/## /g, '<h2 class="text-lg font-bold text-gray-800 mt-6 mb-3">')
+                            .replace(/### /g, '<h3 class="text-md font-semibold text-gray-700 mt-4 mb-2">')
+                            .replace(/#### /g, '<h4 class="text-sm font-medium text-gray-600 mt-3 mb-2">')
+                            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-800">$1</strong>')
+                            .replace(/- \*\*(.*?)\*\*:/g, '<li class="ml-4"><strong class="text-gray-800">$1</strong>:')
+                            .replace(/- (.*?)$/gm, '<li class="ml-4 text-gray-700">$1</li>')
+                            .replace(/\n\n/g, '</p><p class="mb-4">')
+                            .replace(/^\s*(.+)$/gm, '<p class="mb-4">$1</p>')
+                            .replace(/\| (.*?) \|/g, '<td class="border px-4 py-2">$1</td>')
+                            .replace(/\|---/g, '<tr>')
+                        }}
+                      />
                     </div>
                   )}
-                  
-                  <div className="prose max-w-none">
-                    {analysisResult.advice.detailed_advice ? (
-                      <div className="space-y-4">
-                        {formatAIResponse(analysisResult.advice.detailed_advice)}
+
+                  {/* フォールバック: 基本的なアドバイス表示 */}
+                  {!analysisResult.advice?.detailed_advice && (
+                    <>
+                      <div>
+                        <h4 className="font-semibold text-gray-800 mb-3">総合評価</h4>
+                        <p className="text-gray-700 bg-blue-50 p-4 rounded-lg">
+                          {analysisResult.advice?.summary || 'アドバイスを生成中...'}
+                        </p>
                       </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="bg-blue-50 rounded-lg p-6">
-                          <h3 className="text-lg font-semibold text-blue-800 mb-3">総合評価</h3>
-                          <p className="text-blue-700">{analysisResult.advice.overall_advice}</p>
+
+                      {analysisResult.advice?.improvements && analysisResult.advice.improvements.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-gray-800 mb-3">改善ポイント</h4>
+                          <ul className="space-y-2">
+                            {analysisResult.advice.improvements.map((point, index) => (
+                              <li key={index} className="flex items-start">
+                                <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded mr-3 mt-0.5">
+                                  {index + 1}
+                                </span>
+                                <span className="text-gray-700">{point}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                        
-                        {analysisResult.advice.technical_points && analysisResult.advice.technical_points.length > 0 && (
-                          <div className="bg-green-50 rounded-lg p-6">
-                            <h3 className="text-lg font-semibold text-green-800 mb-3">技術的ポイント</h3>
-                            <ul className="space-y-2">
-                              {analysisResult.advice.technical_points.map((point, index) => (
-                                <li key={index} className="flex items-start">
-                                  <span className="text-green-600 mr-2 mt-1">•</span>
-                                  <span className="text-green-700">{point}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                        
-                        {analysisResult.advice.practice_suggestions && analysisResult.advice.practice_suggestions.length > 0 && (
-                          <div className="bg-purple-50 rounded-lg p-6">
-                            <h3 className="text-lg font-semibold text-purple-800 mb-3">練習提案</h3>
-                            <ul className="space-y-2">
-                              {analysisResult.advice.practice_suggestions.map((suggestion, index) => (
-                                <li key={index} className="flex items-start">
-                                  <span className="text-purple-600 mr-2 mt-1">•</span>
-                                  <span className="text-purple-700">{suggestion}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                      )}
+
+                      {analysisResult.advice?.drills && analysisResult.advice.drills.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-gray-800 mb-3">練習メニュー</h4>
+                          <ul className="space-y-2">
+                            {analysisResult.advice.drills.map((drill, index) => (
+                              <li key={index} className="flex items-start">
+                                <span className="bg-green-100 text-green-800 text-sm font-medium px-2 py-1 rounded mr-3 mt-0.5">
+                                  {index + 1}
+                                </span>
+                                <span className="text-gray-700">{drill}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>v>
+
+              {/* AI詳細解析レポート */}
+              {analysisResult.advice?.enhanced && analysisResult.advice?.full_ai_response && (
+                <div className="bg-white rounded-lg shadow-lg p-8">
+                  <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                    <Brain className="w-5 h-5 mr-3 text-purple-600" />
+                    AI詳細解析レポート
+                    <span className="ml-3 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                      ChatGPT生成
+                    </span>
+                  </h3>
+                  
+                  <div className="bg-white rounded-lg p-6">
+                    <div className="ai-response-content">
+                      {formatAIResponse(analysisResult.advice.full_ai_response)}
+                    </div>
                   </div>
                 </div>
               )}
@@ -670,7 +638,7 @@ function App() {
               <div className="text-center">
                 <button
                   onClick={handleReset}
-                  className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
                 >
                   新しい動画を解析
                 </button>
