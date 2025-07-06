@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎾 簡単テニスサービス解析ツール</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .score {
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #feca57;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .advice {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #feca57;
+        }
+        
+        .radar-chart {
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            position: relative;
+        }
+        
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎾 テニスサービス解析ツール</h1>
+        
+        <div class="form-group">
+            <label><span class="emoji">🏸</span>トスの高さ</label>
+            <select id="toss">
+                <option value="">選択してください</option>
+                <option value="low">低い（肩より下）</option>
+                <option value="medium">適切（頭上1-2m）</option>
+                <option value="high">高い（頭上3m以上）</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label><span class="emoji">🦵</span>膝の曲がり具合</label>
+            <select id="knee">
+                <option value="">選択してください</option>
+                <option value="little">少ない（ほぼ直立）</option>
+                <option value="medium">適切（軽く曲がる）</option>
+                <option value="much">多い（深くしゃがむ）</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label><span class="emoji">💪</span>肘の位置</label>
+            <select id="elbow">
+                <option value="">選択してください</option>
+                <option value="low">低い（肩より下）</option>
+                <option value="medium">適切（肩と同じ高さ）</option>
+                <option value="high">高い（肩より上）</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label><span class="emoji">⚡</span>スイングスピード</label>
+            <select id="speed">
+                <option value="">選択してください</option>
+                <option value="slow">遅い</option>
+                <option value="medium">適切</option>
+                <option value="fast">速い</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label><span class="emoji">🎯</span>フォロースルー</label>
+            <select id="followthrough">
+                <option value="">選択してください</option>
+                <option value="short">短い</option>
+                <option value="medium">適切</option>
+                <option value="long">長い</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label><span class="emoji">⏱️</span>サービス全体の時間（秒）</label>
+            <input type="number" id="timing" placeholder="例: 2.5" step="0.1" min="0.5" max="10">
+        </div>
+        
+        <button onclick="analyzeServe()">🔍 解析実行</button>
+        
+        <div id="result" class="result">
+            <div class="score" id="score"></div>
+            <div id="radar"></div>
+            <div id="advice-list"></div>
+            <div id="detailed-analysis"></div>
+        </div>
+    </div>
+    
+    <script>
+        function analyzeServe() {
+            const toss = document.getElementById('toss').value;
+            const knee = document.getElementById('knee').value;
+            const elbow = document.getElementById('elbow').value;
+            const speed = document.getElementById('speed').value;
+            const followthrough = document.getElementById('followthrough').value;
+            const timing = parseFloat(document.getElementById('timing').value);
+            
+            if (!toss || !knee || !elbow || !speed || !followthrough || !timing) {
+                alert('すべての項目を入力してください');
+                return;
+            }
+            
+            let totalScore = 0;
+            let advice = [];
+            let scores = {
+                toss: 0,
+                knee: 0,
+                elbow: 0,
+                speed: 0,
+                followthrough: 0,
+                timing: 0
+            };
+            
+            // トス評価
+            if (toss === 'medium') {
+                scores.toss = 10;
+                totalScore += 10;
+            } else if (toss === 'low') {
+                scores.toss = 6;
+                totalScore += 6;
+                advice.push('🏸 トスをもう少し高く上げましょう。理想は頭上1-2mです。');
+            } else {
+                scores.toss = 7;
+                totalScore += 7;
+                advice.push('🏸 トスが高すぎます。コントロールが難しくなります。');
+            }
+            
+            // 膝評価
+            if (knee === 'medium') {
+                scores.knee = 10;
+                totalScore += 10;
+            } else if (knee === 'little') {
+                scores.knee = 5;
+                totalScore += 5;
+                advice.push('🦵 膝をもう少し曲げてパワーを蓄えましょう。');
+            } else {
+                scores.knee = 6;
+                totalScore += 6;
+                advice.push('🦵 膝の曲げすぎに注意。バランスを保ちましょう。');
+            }
+            
+            // 肘評価
+            if (elbow === 'medium') {
+                scores.elbow = 10;
+                totalScore += 10;
+            } else if (elbow === 'low') {
+                scores.elbow = 6;
+                totalScore += 6;
+                advice.push('💪 肘をもう少し高い位置に保ちましょう。');
+            } else {
+                scores.elbow = 7;
+                totalScore += 7;
+                advice.push('💪 肘が高すぎます。肩と同じ高さが理想です。');
+            }
+            
+            // スピード評価
+            if (speed === 'medium') {
+                scores.speed = 10;
+                totalScore += 10;
+            } else if (speed === 'slow') {
+                scores.speed = 6;
+                totalScore += 6;
+                advice.push('⚡ もう少しスイングスピードを上げてみましょう。');
+            } else {
+                scores.speed = 7;
+                totalScore += 7;
+                advice.push('⚡ スイングが速すぎます。コントロールを重視しましょう。');
+            }
+            
+            // フォロースルー評価
+            if (followthrough === 'medium') {
+                scores.followthrough = 10;
+                totalScore += 10;
+            } else if (followthrough === 'short') {
+                scores.followthrough = 6;
+                totalScore += 6;
+                advice.push('🎯 フォロースルーを長くして、ボールに回転をかけましょう。');
+            } else {
+                scores.followthrough = 7;
+                totalScore += 7;
+                advice.push('🎯 フォロースルーが長すぎます。適度な長さに調整しましょう。');
+            }
+            
+            // タイミング評価
+            if (timing >= 1.5 && timing <= 2.5) {
+                scores.timing = 10;
+                totalScore += 10;
+            } else if (timing < 1.5) {
+                scores.timing = 6;
+                totalScore += 6;
+                advice.push('⏱️ サービスが早すぎます。もう少しゆっくりと丁寧に。');
+            } else {
+                scores.timing = 7;
+                totalScore += 7;
+                advice.push('⏱️ サービスが遅すぎます。もう少しテンポよく。');
+            }
+            
+            const finalScore = Math.round(totalScore / 6);
+            
+            // 結果表示
+            document.getElementById('score').innerHTML = `総合スコア: ${finalScore}/10`;
+            
+            let adviceHtml = '<h3>🎯 改善アドバイス</h3>';
+            if (advice.length === 0) {
+                adviceHtml += '<div class="advice">🏆 素晴らしい！完璧なフォームです！</div>';
+            } else {
+                advice.forEach(tip => {
+                    adviceHtml += `<div class="advice">${tip}</div>`;
+                });
+            }
+            
+            // 詳細分析
+            let detailedHtml = '<h3>📊 詳細分析</h3>';
+            detailedHtml += `<p><strong>トス:</strong> ${scores.toss}/10</p>`;
+            detailedHtml += `<p><strong>膝の使い方:</strong> ${scores.knee}/10</p>`;
+            detailedHtml += `<p><strong>肘の位置:</strong> ${scores.elbow}/10</p>`;
+            detailedHtml += `<p><strong>スイングスピード:</strong> ${scores.speed}/10</p>`;
+            detailedHtml += `<p><strong>フォロースルー:</strong> ${scores.followthrough}/10</p>`;
+            detailedHtml += `<p><strong>タイミング:</strong> ${scores.timing}/10</p>`;
+            
+            // レベル判定
+            let level = '';
+            if (finalScore >= 9) level = '🏆 プロレベル';
+            else if (finalScore >= 8) level = '🥇 上級者';
+            else if (finalScore >= 7) level = '🥈 中級者';
+            else if (finalScore >= 6) level = '🥉 初級者';
+            else level = '📚 練習が必要';
+            
+            detailedHtml += `<p><strong>あなたのレベル:</strong> ${level}</p>`;
+            
+            document.getElementById('advice-list').innerHTML = adviceHtml;
+            document.getElementById('detailed-analysis').innerHTML = detailedHtml;
+            document.getElementById('result').style.display = 'block';
+            
+            // スムーズスクロール
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+
