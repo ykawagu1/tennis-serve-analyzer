@@ -46,7 +46,7 @@ function App() {
     { id: 3, title: '結果確認', icon: BarChart3 }
   ];
 
-  // マークダウンテキストをフォーマットする関数
+  // マークダウンテキストをフォーマットする関数（マークダウン記法を除去）
   const formatAIResponse = (text) => {
     if (!text) return null;
     
@@ -67,25 +67,33 @@ function App() {
           );
           currentSection = [];
         }
-        // 大見出し
+        // 大見出し（##を除去）
         elements.push(
           <h2 key={`h2-${index}`} className="text-2xl font-bold text-blue-800 mb-4 mt-8 border-b-2 border-blue-200 pb-2">
             {trimmedLine.replace('## ', '')}
           </h2>
         );
       } else if (trimmedLine.startsWith('### ')) {
-        // 中見出し
+        // 中見出し（###を除去）
         currentSection.push(
           <h3 key={`h3-${index}`} className="text-xl font-semibold text-green-700 mb-3 mt-6">
             {trimmedLine.replace('### ', '')}
           </h3>
         );
       } else if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**')) {
-        // 太字見出し
+        // 太字見出し（**を除去）
         currentSection.push(
           <h4 key={`h4-${index}`} className="text-lg font-semibold text-purple-700 mb-2 mt-4">
             {trimmedLine.replace(/\*\*/g, '')}
           </h4>
+        );
+      } else if (trimmedLine.includes('**')) {
+        // 行内の太字記法を除去
+        const cleanText = trimmedLine.replace(/\*\*/g, '');
+        currentSection.push(
+          <p key={`p-${index}`} className="text-gray-700 leading-relaxed mb-3">
+            {cleanText}
+          </p>
         );
       } else if (trimmedLine.startsWith('- ')) {
         // リスト項目
@@ -104,10 +112,11 @@ function App() {
           </div>
         );
       } else if (trimmedLine.length > 0) {
-        // 通常のテキスト
+        // 通常のテキスト（マークダウン記法を除去）
+        const cleanText = trimmedLine.replace(/\*\*/g, '').replace(/\*/g, '');
         currentSection.push(
           <p key={`p-${index}`} className="text-gray-700 leading-relaxed mb-3">
-            {trimmedLine}
+            {cleanText}
           </p>
         );
       }
@@ -190,20 +199,31 @@ function App() {
       });
 
       // デバッグ: レスポンスデータの確認
-      console.log('バックエンドからのレスポンス:', response.data);
-      console.log('解析結果データ:', response.data.result);
+      console.log('=== フロントエンド レスポンス受信 ===');
+      console.log('response.status:', response.status);
+      console.log('response.headers:', response.headers);
+      console.log('response.data:', response.data);
+      console.log('response.data.success:', response.data?.success);
+      console.log('response.data.result:', response.data?.result);
+      
+      if (response.data?.result?.advice) {
+        console.log('advice keys:', Object.keys(response.data.result.advice));
+        console.log('advice.one_point_advice:', response.data.result.advice.one_point_advice);
+      }
+      console.log('=====================================');
       
       // レスポンスの構造を確認して適切にデータを設定
       if (response.data && response.data.success && response.data.result) {
+        console.log('解析結果を設定中...');
         setAnalysisResult(response.data.result);
-        console.log('解析結果設定完了:', response.data.result);
+        console.log('解析結果設定完了');
+        setCurrentStep(3);
+        console.log('ステップ3に移行完了');
       } else {
         console.error('予期しないレスポンス構造:', response.data);
         setError('解析結果の形式が正しくありません');
         return;
       }
-      
-      setCurrentStep(3);
     } catch (err) {
       console.error('解析エラー:', err);
       if (err.response?.data?.error) {
@@ -427,7 +447,7 @@ function App() {
               <div className="mt-8 bg-orange-50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-orange-800 mb-3 flex items-center">
                   <MessageCircle className="w-5 h-5 mr-2" />
-                  気になっていること（任意）
+                  サーブで気になっていることや、自分の年齢、性別、体格などを入力していただければそれらの情報も加味します。（任意）
                 </h3>
                 <textarea
                   value={userConcerns}
@@ -438,8 +458,8 @@ function App() {
                   maxLength={200}
                 />
                 <div className="flex justify-between items-center mt-2">
-                  <p className="text-sm text-orange-600">
-                    記入いただくと、あなたの悩みに特化したワンポイントアドバイスも生成されます
+                  <p className="text-sm text-gray-600">
+                    記入いただくと、あなたの悩みに特化したアドバイスも生成されます
                   </p>
                   <span className="text-xs text-orange-500">
                     {userConcerns.length}/200
@@ -549,24 +569,6 @@ function App() {
                 </div>
               </div>
 
-              {/* 新機能：ワンポイントアドバイス */}
-              {userConcerns && analysisResult.advice?.one_point_advice && (
-                <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg shadow-lg p-8">
-                  <div className="flex items-center mb-4">
-                    <MessageCircle className="w-8 h-8 text-orange-600 mr-3" />
-                    <h2 className="text-2xl font-bold text-orange-800">あなたへのワンポイントアドバイス</h2>
-                  </div>
-                  <div className="bg-white rounded-lg p-6 border-l-4 border-orange-500">
-                    <h3 className="text-lg font-semibold text-orange-800 mb-3">
-                      「{userConcerns}」について
-                    </h3>
-                    <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                      {analysisResult.advice.one_point_advice}
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* フェーズ別解析 */}
               {analysisResult.phase_analysis && (
                 <div className="bg-white rounded-lg shadow-lg p-8">
@@ -624,6 +626,7 @@ function App() {
                   <div className="prose max-w-none">
                     {analysisResult.advice.detailed_advice ? (
                       <div className="space-y-4">
+                        {/* ChatGPTの詳細アドバイスを表示（one_point_adviceは除外） */}
                         {formatAIResponse(analysisResult.advice.detailed_advice)}
                       </div>
                     ) : (

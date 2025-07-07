@@ -683,15 +683,21 @@ class MotionAnalyzer:
         return abs(angle)
     
     def _calculate_trajectory_smoothness(self, trajectory: List[Dict]) -> float:
-        """軌道の滑らかさを計算"""
+        """軌道の滑らかさを計算（Noneチェック追加）"""
         if len(trajectory) < 3:
+            return 0.0
+        
+        # Noneでない有効なポイントのみを抽出
+        valid_points = [point for point in trajectory if point is not None]
+        
+        if len(valid_points) < 3:
             return 0.0
         
         # 速度変化の標準偏差を計算
         velocities = []
-        for i in range(1, len(trajectory)):
-            dx = trajectory[i]['x'] - trajectory[i-1]['x']
-            dy = trajectory[i]['y'] - trajectory[i-1]['y']
+        for i in range(1, len(valid_points)):
+            dx = valid_points[i]['x'] - valid_points[i-1]['x']
+            dy = valid_points[i]['y'] - valid_points[i-1]['y']
             velocity = math.sqrt(dx*dx + dy*dy)
             velocities.append(velocity)
         

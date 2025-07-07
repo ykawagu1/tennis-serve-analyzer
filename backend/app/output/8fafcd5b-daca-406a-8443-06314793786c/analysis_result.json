@@ -1,0 +1,175 @@
+{
+  "total_score": 7.887712922700212,
+  "frame_count": 641,
+  "phase_analysis": {
+    "準備フェーズ": {
+      "score": 7.0
+    },
+    "トスフェーズ": {
+      "score": 6.5
+    },
+    "バックスイングフェーズ": {
+      "score": 7.5
+    },
+    "インパクトフェーズ": {
+      "score": 8.0
+    },
+    "フォロースルーフェーズ": {
+      "score": 7.2
+    }
+  },
+  "advice": {
+    "overall_advice": "アドバイス生成中にエラーが発生しました。",
+    "technical_points": [],
+    "practice_suggestions": [],
+    "error": "AdviceGenerator.generate_advice() got an unexpected keyword argument 'user_level'"
+  },
+  "user_concerns": "弱いサーブしか打てません",
+  "preprocessing": {
+    "success": true,
+    "duration": 0,
+    "fps": 30
+  },
+  "pose_detection": {
+    "success": true,
+    "detected_frames": 436,
+    "confidence_avg": 0.0
+  },
+  "technical_analysis": {
+    "knee_movement": {
+      "max_bend_angle": 0.37012717737876305,
+      "max_bend_frame": 274,
+      "timing_score": 8.0,
+      "depth_score": 9.0,
+      "overall_score": 8.5,
+      "issues": [
+        "膝の曲げが早すぎます",
+        "膝の曲げが深すぎます"
+      ],
+      "recommendations": [
+        "膝の曲げを少し浅くして、バランスを保ちましょう",
+        "トスと同時に膝を曲げ始めるタイミングを練習しましょう"
+      ]
+    },
+    "elbow_position": {
+      "average_height": 0.5,
+      "shoulder_relative_position": 0,
+      "height_score": 10.0,
+      "stability_score": 8.0,
+      "overall_score": 9.0,
+      "issues": [
+        "肘の動きが不安定です"
+      ],
+      "recommendations": [
+        "肘の軌道を安定させるため、ゆっくりとした練習から始めましょう"
+      ]
+    },
+    "toss_trajectory": {
+      "max_height": 1.03442969545722,
+      "forward_distance": 0.06408575177192688,
+      "consistency_score": 0.24525550724025447,
+      "height_score": 9.0,
+      "distance_score": 10.0,
+      "overall_score": 7.150851690800849,
+      "issues": [
+        "トスが高すぎます",
+        "トスの軌道が不安定です"
+      ],
+      "recommendations": [
+        "トスの高さを少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "body_rotation": {
+      "max_shoulder_rotation": 179.96566860313624,
+      "max_hip_rotation": 179.92746447183015,
+      "shoulder_score": 9.0,
+      "hip_score": 9.0,
+      "overall_score": 9.0,
+      "issues": [
+        "肩の回転が過度です",
+        "腰の回転が過度です"
+      ],
+      "recommendations": [
+        "肩の回転を少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "timing": {
+      "total_duration": 21.366666666666667,
+      "phase_scores": {
+        "preparation": 4.0,
+        "ball_toss": 4.0,
+        "trophy_position": 4.0,
+        "acceleration": 6.0,
+        "contact": 10.0,
+        "follow_through": 4.0
+      },
+      "overall_score": 5.333333333333333,
+      "issues": [
+        "preparationフェーズが長すぎます",
+        "ball_tossフェーズが短すぎます",
+        "trophy_positionフェーズが短すぎます",
+        "follow_throughフェーズが長すぎます"
+      ],
+      "recommendations": [
+        "各フェーズのタイミングを意識して、リズムの良いサーブを心がけましょう",
+        "メトロノームを使った練習で、一定のリズムを身につけましょう"
+      ]
+    }
+  },
+  "serve_phases": {
+    "preparation": {
+      "start_frame": 0,
+      "end_frame": 408,
+      "duration": 13.6,
+      "key_events": [
+        "stance_setup",
+        "initial_position"
+      ]
+    },
+    "ball_toss": {
+      "start_frame": 408,
+      "end_frame": 433,
+      "duration": 0.8333333333333334,
+      "key_events": [
+        "toss_initiation",
+        "ball_release"
+      ]
+    },
+    "trophy_position": {
+      "start_frame": 433,
+      "end_frame": 107,
+      "duration": -10.866666666666667,
+      "key_events": [
+        "trophy_formation",
+        "weight_transfer"
+      ]
+    },
+    "acceleration": {
+      "start_frame": 107,
+      "end_frame": 119,
+      "duration": 0.4,
+      "key_events": [
+        "racket_acceleration",
+        "kinetic_chain"
+      ]
+    },
+    "contact": {
+      "start_frame": 119,
+      "end_frame": 122,
+      "duration": 0.1,
+      "key_events": [
+        "ball_contact",
+        "maximum_reach"
+      ]
+    },
+    "follow_through": {
+      "start_frame": 122,
+      "end_frame": 640,
+      "duration": 17.266666666666666,
+      "key_events": [
+        "deceleration",
+        "landing"
+      ]
+    }
+  }
+}

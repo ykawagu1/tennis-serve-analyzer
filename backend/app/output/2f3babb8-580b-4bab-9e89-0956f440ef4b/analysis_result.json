@@ -1,0 +1,177 @@
+{
+  "total_score": 7.887712922700212,
+  "frame_count": 641,
+  "phase_analysis": {
+    "準備フェーズ": {
+      "score": 7.0
+    },
+    "トスフェーズ": {
+      "score": 6.5
+    },
+    "バックスイングフェーズ": {
+      "score": 7.5
+    },
+    "インパクトフェーズ": {
+      "score": 8.0
+    },
+    "フォロースルーフェーズ": {
+      "score": 7.2
+    }
+  },
+  "advice": {
+    "summary": "フォームに改善の余地があります。基礎から見直しましょう。",
+    "improvements": [],
+    "drills": [],
+    "enhanced": true,
+    "detailed_advice": "## 1. 🏆 総合技術評価\n現在のレベルはアマチュア上級者における基礎的なサーブフォームに課題があり、特に安定性に欠けます。基本的な技術とフィジカルの強化が必要です。\n\n## 2. 🔬 バイオメカニクス分析\n### 主要改善点（上位５つ）\n1. **スタンスの広さ**: 現在は狭すぎるため、肩幅より少し広く取り、重心を安定させる。\n2. **肘の位置、高さ**: 現在は低く、理想は肩より8-12cm高く。これにより打点が高くなり、安定性が向上する。\n3. **膝の曲げ角度**: 現在は浅く、理想は155-165度。これにより爆発的な足の力を利用できる。\n4. **手首の使い方**: 現在は硬直しているため、柔軟性を持たせスナップを効かせる。\n5. **体幹の捻り方**: 現在は不足している。上半身と下半身のねじれを大きくしてパワーを引き出す。\n\n## 3. 🏅 世界トップ選手比較\nフェデラーやジョコビッチは、膝の深い曲げ、肘の高い位置、体幹の強い捻りを利用しています。これらを目指すことで、サーブのパワーと安定性が向上します。\n\n## 4. 🎯 8週間改善プログラム\n### 第1-2週: 基礎修正期\n基本フォームの見直し。スタンスの広さと膝の曲げを意識し、鏡を使って確認します。1日30分間、無理のない範囲で繰り返す。\n\n### 第3-4週: 技術統合期\n肘の高さと手首のスナップを意識した練習。軽いボールを使い、正しい動作を体に覚えさせます。週3回、各30分。\n\n### 第5-6週: 実戦応用期\n実際にサーブを打ち、体幹の捻りを意識します。ビデオで自分のフォームを確認し、改善点を修正。週3回、各45分。\n\n### 第7-8週: 完成期\n試合形式でサーブを繰り返し、安定性と精度を高めます。実戦を意識した練習を週4回行い、各60分。\n\n## 5. 🏋️ 専門フィジカル強化プログラム\n### A. 下半身パワー強化（週3回）\n- スクワット: 40kg×10回×3セット\n- バウンディング: 15回×3セット\n\n### B. 体幹安定化（週4回）\n- フロントプランク: 30秒×3セット\n- ロシアンツイスト: 10回×3セット\n\n### C. 上半身連動性（週2回）\n- 肩甲骨ストレッチ: 15秒×3セット\n- ローテーターカフエクササイズ: 3kg×10回×3セット\n\n## 6. 🧠 メンタル・戦術強化\n### A. 集中力向上\n- ルーティン確立: トス前に深呼吸3回、目線をボールに集中\n- 呼吸法: 3秒吸って、3秒吐くを3セット\n\n### B. 実戦確認システム\n- [ ] 膝角度: 155-165度をキープ\n- [ ] 肘高さ: 肩より+8-12cm高い位置\n- [ ] トス位置: 前方12-15cm、右側5-8cm\n- [ ] 体重移動: 0.3-0.4秒で完了\n- [ ] フォロースルー: 体を横切る軌道\n\n## 7. 💡 あなたへのワンポイントアドバイス\n59歳という年齢を考慮し、無理なく持続可能なトレーニングが重要です。スタンスの広さを見直し、膝の曲げを強化することで安定性を高め、肘の位置を高く保つことで打点を改善します。これによりサービスの精度とパワーが向上します。体幹の強化は捻りの力を引き出し、下半身のトレーニングは持久力とパワーをサポートします。週に数回、フィジカルとテクニカルのバランスを取りながらトレーニングを行い、実戦での確認を怠らないよう心がけてください。無理せずに継続することが成功の鍵となります。",
+    "user_concerns": "私は５９才の男性です。身長は１８０ｃｍ、体重は８８キロです。サーブが安定しません。どのようなトレーニングが効果的でしょうか？"
+  },
+  "user_concerns": "私は５９才の男性です。身長は１８０ｃｍ、体重は８８キロです。サーブが安定しません。どのようなトレーニングが効果的でしょうか？",
+  "preprocessing": {
+    "success": true,
+    "duration": 0,
+    "fps": 30
+  },
+  "pose_detection": {
+    "success": true,
+    "detected_frames": 436,
+    "confidence_avg": 0.0
+  },
+  "technical_analysis": {
+    "knee_movement": {
+      "max_bend_angle": 0.37012717737876305,
+      "max_bend_frame": 274,
+      "timing_score": 8.0,
+      "depth_score": 9.0,
+      "overall_score": 8.5,
+      "issues": [
+        "膝の曲げが早すぎます",
+        "膝の曲げが深すぎます"
+      ],
+      "recommendations": [
+        "膝の曲げを少し浅くして、バランスを保ちましょう",
+        "トスと同時に膝を曲げ始めるタイミングを練習しましょう"
+      ]
+    },
+    "elbow_position": {
+      "average_height": 0.5,
+      "shoulder_relative_position": 0,
+      "height_score": 10.0,
+      "stability_score": 8.0,
+      "overall_score": 9.0,
+      "issues": [
+        "肘の動きが不安定です"
+      ],
+      "recommendations": [
+        "肘の軌道を安定させるため、ゆっくりとした練習から始めましょう"
+      ]
+    },
+    "toss_trajectory": {
+      "max_height": 1.03442969545722,
+      "forward_distance": 0.06408575177192688,
+      "consistency_score": 0.24525550724025447,
+      "height_score": 9.0,
+      "distance_score": 10.0,
+      "overall_score": 7.150851690800849,
+      "issues": [
+        "トスが高すぎます",
+        "トスの軌道が不安定です"
+      ],
+      "recommendations": [
+        "トスの高さを少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "body_rotation": {
+      "max_shoulder_rotation": 179.96566860313624,
+      "max_hip_rotation": 179.92746447183015,
+      "shoulder_score": 9.0,
+      "hip_score": 9.0,
+      "overall_score": 9.0,
+      "issues": [
+        "肩の回転が過度です",
+        "腰の回転が過度です"
+      ],
+      "recommendations": [
+        "肩の回転を少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "timing": {
+      "total_duration": 21.366666666666667,
+      "phase_scores": {
+        "preparation": 4.0,
+        "ball_toss": 4.0,
+        "trophy_position": 4.0,
+        "acceleration": 6.0,
+        "contact": 10.0,
+        "follow_through": 4.0
+      },
+      "overall_score": 5.333333333333333,
+      "issues": [
+        "preparationフェーズが長すぎます",
+        "ball_tossフェーズが短すぎます",
+        "trophy_positionフェーズが短すぎます",
+        "follow_throughフェーズが長すぎます"
+      ],
+      "recommendations": [
+        "各フェーズのタイミングを意識して、リズムの良いサーブを心がけましょう",
+        "メトロノームを使った練習で、一定のリズムを身につけましょう"
+      ]
+    }
+  },
+  "serve_phases": {
+    "preparation": {
+      "start_frame": 0,
+      "end_frame": 408,
+      "duration": 13.6,
+      "key_events": [
+        "stance_setup",
+        "initial_position"
+      ]
+    },
+    "ball_toss": {
+      "start_frame": 408,
+      "end_frame": 433,
+      "duration": 0.8333333333333334,
+      "key_events": [
+        "toss_initiation",
+        "ball_release"
+      ]
+    },
+    "trophy_position": {
+      "start_frame": 433,
+      "end_frame": 107,
+      "duration": -10.866666666666667,
+      "key_events": [
+        "trophy_formation",
+        "weight_transfer"
+      ]
+    },
+    "acceleration": {
+      "start_frame": 107,
+      "end_frame": 119,
+      "duration": 0.4,
+      "key_events": [
+        "racket_acceleration",
+        "kinetic_chain"
+      ]
+    },
+    "contact": {
+      "start_frame": 119,
+      "end_frame": 122,
+      "duration": 0.1,
+      "key_events": [
+        "ball_contact",
+        "maximum_reach"
+      ]
+    },
+    "follow_through": {
+      "start_frame": 122,
+      "end_frame": 640,
+      "duration": 17.266666666666666,
+      "key_events": [
+        "deceleration",
+        "landing"
+      ]
+    }
+  }
+}

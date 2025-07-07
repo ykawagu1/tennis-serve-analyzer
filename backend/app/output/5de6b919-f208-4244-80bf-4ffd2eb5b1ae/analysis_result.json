@@ -1,0 +1,177 @@
+{
+  "total_score": 7.887712922700212,
+  "frame_count": 641,
+  "phase_analysis": {
+    "準備フェーズ": {
+      "score": 7.0
+    },
+    "トスフェーズ": {
+      "score": 6.5
+    },
+    "バックスイングフェーズ": {
+      "score": 7.5
+    },
+    "インパクトフェーズ": {
+      "score": 8.0
+    },
+    "フォロースルーフェーズ": {
+      "score": 7.2
+    }
+  },
+  "advice": {
+    "summary": "フォームに改善の余地があります。基礎から見直しましょう。",
+    "improvements": [],
+    "drills": [],
+    "enhanced": true,
+    "detailed_advice": "## 1. 🏆 総合技術評価\n現在のフォームでは、サービスの基礎的なメカニクスが不足しており、世界基準での競争力は限られています。特にスパンサーブにおいて回転を生み出す技術が欠如しているため、球威や方向性が安定しません。\n\n## 2. 🔬 バイオメカニクス分析\n### 主要改善点（上位3つ）\n1. **トスの位置**:\n   - 現在: トスが頭の前方すぎる。\n   - 理想: 左肩のやや前方上部にトスし、肩のラインに沿った位置。\n   - 改善: トスの一貫性を高めるドリルを実施。\n\n2. **ラケットヘッドの位置**:\n   - 現在: ラケットが背中に回り込んでいない。\n   - 理想: トロフィーポーズでラケットヘッドがより背中側に位置する。\n   - 改善: 鏡を使ってトロフィーポーズを確認。\n\n3. **体の回転**:\n   - 現在: 上半身がほとんど回転していない。\n   - 理想: 腰から肩にかけての回転を使い、パワーとスピンを生み出す。\n   - 改善: ツイスト動作を意識したシャドウスイング。\n\n## 3. 🏅 世界トップ選手比較\n- フェデラーやジョコビッチはトスの安定性、ラケットヘッドのスムーズな動き、体の回転を活用している。\n- 目標は、彼らのように効率的なエネルギー伝達を可能にし、安定したスパンサーブを打つこと。\n\n## 4. 🎯 8週間改善プログラム\n### 第1-2週: 基礎修正期\n- トスの一貫性を高める練習。トスの位置を定め、鏡を用いたフォーム確認。\n\n### 第3-4週: 技術統合期\n- トロフィーポーズの練習。ラケットヘッドの位置を確認し、回転を意識する。\n\n### 第5-6週: 実戦応用期\n- 体の回転を使ったサーブ練習。スピン量を増やすためのスローサーブから始める。\n\n### 第7-8週: 完成期\n- フルスピードでのスパンサーブ。安定性とスピードを兼ね備えたサーブを目指す。\n\n## 5. 🏋️ 専門フィジカル強化プログラム\n### A. 下半身パワー強化（週3回）\n- スクワット、ジャンプスクワット、ボックスジャンプ\n\n### B. 体幹安定化（週4回）\n- サイドプランク、ロシアンツイスト、プランクホールド\n\n### C. 上半身連動性（週2回）\n- バンデッド肩甲骨リトラクション、ローテーターカフエクササイズ\n\n## 6. 🧠 メンタル・戦術強化\n### A. 集中力向上\n- 試合前ルーティン、深呼吸法の導入\n\n### B. 実戦確認システム\n- トスの位置確認、ラケットヘッドの動き、体の回転、フィニッシュポジション、スピン量の確認\n\n## 7. 💡 あなたへのワンポイントアドバイス\n「スパンサーブが打てません」の原因は、主にトスの不安定さと体の回転不足です。スパンサーブでは、ラケットのスイングパスが重要で、トスが理想の位置にないと正しいスイングができません。まずはトスの位置を安定させる練習を毎日10分行いましょう。次に、肩と腰のツイストを意識したシャドウスイングを週3回、各5分行います。改善の目安は約8週間とし、トスと体の動きがスムーズに連動することを目指してください。",
+    "one_point_advice": "「スパンサーブが打てません」の原因は、主にトスの不安定さと体の回転不足です。スパンサーブでは、ラケットのスイングパスが重要で、トスが理想の位置にないと正しいスイングができません。まずはトスの位置を安定させる練習を毎日10分行いましょう。次に、肩と腰のツイストを意識したシャドウスイングを週3回、各5分行います。改善の目安は約8週間とし、トスと体の動きがスムーズに連動することを目指してください。"
+  },
+  "user_concerns": "スパンサーブが打てません",
+  "preprocessing": {
+    "success": true,
+    "duration": 0,
+    "fps": 30
+  },
+  "pose_detection": {
+    "success": true,
+    "detected_frames": 436,
+    "confidence_avg": 0.0
+  },
+  "technical_analysis": {
+    "knee_movement": {
+      "max_bend_angle": 0.37012717737876305,
+      "max_bend_frame": 274,
+      "timing_score": 8.0,
+      "depth_score": 9.0,
+      "overall_score": 8.5,
+      "issues": [
+        "膝の曲げが早すぎます",
+        "膝の曲げが深すぎます"
+      ],
+      "recommendations": [
+        "膝の曲げを少し浅くして、バランスを保ちましょう",
+        "トスと同時に膝を曲げ始めるタイミングを練習しましょう"
+      ]
+    },
+    "elbow_position": {
+      "average_height": 0.5,
+      "shoulder_relative_position": 0,
+      "height_score": 10.0,
+      "stability_score": 8.0,
+      "overall_score": 9.0,
+      "issues": [
+        "肘の動きが不安定です"
+      ],
+      "recommendations": [
+        "肘の軌道を安定させるため、ゆっくりとした練習から始めましょう"
+      ]
+    },
+    "toss_trajectory": {
+      "max_height": 1.03442969545722,
+      "forward_distance": 0.06408575177192688,
+      "consistency_score": 0.24525550724025447,
+      "height_score": 9.0,
+      "distance_score": 10.0,
+      "overall_score": 7.150851690800849,
+      "issues": [
+        "トスが高すぎます",
+        "トスの軌道が不安定です"
+      ],
+      "recommendations": [
+        "トスの高さを少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "body_rotation": {
+      "max_shoulder_rotation": 179.96566860313624,
+      "max_hip_rotation": 179.92746447183015,
+      "shoulder_score": 9.0,
+      "hip_score": 9.0,
+      "overall_score": 9.0,
+      "issues": [
+        "肩の回転が過度です",
+        "腰の回転が過度です"
+      ],
+      "recommendations": [
+        "肩の回転を少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "timing": {
+      "total_duration": 21.366666666666667,
+      "phase_scores": {
+        "preparation": 4.0,
+        "ball_toss": 4.0,
+        "trophy_position": 4.0,
+        "acceleration": 6.0,
+        "contact": 10.0,
+        "follow_through": 4.0
+      },
+      "overall_score": 5.333333333333333,
+      "issues": [
+        "preparationフェーズが長すぎます",
+        "ball_tossフェーズが短すぎます",
+        "trophy_positionフェーズが短すぎます",
+        "follow_throughフェーズが長すぎます"
+      ],
+      "recommendations": [
+        "各フェーズのタイミングを意識して、リズムの良いサーブを心がけましょう",
+        "メトロノームを使った練習で、一定のリズムを身につけましょう"
+      ]
+    }
+  },
+  "serve_phases": {
+    "preparation": {
+      "start_frame": 0,
+      "end_frame": 408,
+      "duration": 13.6,
+      "key_events": [
+        "stance_setup",
+        "initial_position"
+      ]
+    },
+    "ball_toss": {
+      "start_frame": 408,
+      "end_frame": 433,
+      "duration": 0.8333333333333334,
+      "key_events": [
+        "toss_initiation",
+        "ball_release"
+      ]
+    },
+    "trophy_position": {
+      "start_frame": 433,
+      "end_frame": 107,
+      "duration": -10.866666666666667,
+      "key_events": [
+        "trophy_formation",
+        "weight_transfer"
+      ]
+    },
+    "acceleration": {
+      "start_frame": 107,
+      "end_frame": 119,
+      "duration": 0.4,
+      "key_events": [
+        "racket_acceleration",
+        "kinetic_chain"
+      ]
+    },
+    "contact": {
+      "start_frame": 119,
+      "end_frame": 122,
+      "duration": 0.1,
+      "key_events": [
+        "ball_contact",
+        "maximum_reach"
+      ]
+    },
+    "follow_through": {
+      "start_frame": 122,
+      "end_frame": 640,
+      "duration": 17.266666666666666,
+      "key_events": [
+        "deceleration",
+        "landing"
+      ]
+    }
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "total_score": 7.887712922700212,
+  "frame_count": 641,
+  "phase_analysis": {
+    "準備フェーズ": {
+      "score": 7.0
+    },
+    "トスフェーズ": {
+      "score": 6.5
+    },
+    "バックスイングフェーズ": {
+      "score": 7.5
+    },
+    "インパクトフェーズ": {
+      "score": 8.0
+    },
+    "フォロースルーフェーズ": {
+      "score": 7.2
+    }
+  },
+  "advice": {
+    "summary": "フォームに改善の余地があります。基礎から見直しましょう。",
+    "improvements": [],
+    "drills": [],
+    "enhanced": true,
+    "detailed_advice": "## 1. 🏆 総合技術評価\n現在のスピンサーブの技術レベルは、プロツアー選手と比較すると大きな改善の余地があります。特に、ボールのスピン量と安定性が不足しており、これが全体的なスコア0/10に反映されています。まず基礎から見直し、安定したスピンを生成する技術を習得することが必要です。\n\n## 2. 🔬 バイオメカニクス分析\n### 主要改善点（上位3つ）\n1. **トスの高さと位置**: 現在のトスは肩の前方に落ちすぎています。理想は頭の真上からやや後方で、トスの高さは腕が完全に伸びた状態でラケットがボールに届く位置です。\n2. **体の回転軸**: サーブ時に体の回転が不足しています。理想は腰から肩までの連動した回転がスムーズに行えることです。\n3. **手首のスナップ**: サーブ時に手首のスナップが弱く、スピンをかける動作が不足しています。理想はインパクト直前に手首を柔らかく使い、ボールにスピンをかけられる状態です。\n\n## 3. 🏅 世界トップ選手比較\nフェデラーやジョコビッチ、ナダルは、トスの位置と体の回転を非常に効率的に行っています。彼らはインパクト時に体全体を使ってスピンを生成しています。あなたの目標は、彼らのような体の回転とトスの一致を目指すことです。\n\n## 4. 🎯 8週間改善プログラム\n### 第1-2週: 基礎修正期\n- トスの位置と高さの確認練習\n- スナップを意識したハーフサーブ\n\n### 第3-4週: 技術統合期\n- 回転を意識したスピンサーブ練習\n- ビデオ分析を用いたフォーム確認\n\n### 第5-6週: 実戦応用期\n- サーブとボレーの連携練習\n- プレッシャーをかけたサーブ練習\n\n### 第7-8週: 完成期\n- トップスピンを意識したゲーム形式練習\n- パフォーマンス評価とフィードバック\n\n## 5. 🏋️ 専門フィジカル強化プログラム\n### A. 下半身パワー強化（週3回）\n- スクワット、ジャンピングランジ、ボックスジャンプ\n\n### B. 体幹安定化（週4回）\n- フロントプランク、サイドプランク、メディシンボールローテーション\n\n### C. 上半身連動性（週2回）\n- 肩甲骨ストレッチ、ダンベルショルダープレス、ローテーターカフエクササイズ\n\n## 6. 🧠 メンタル・戦術強化\n### A. 集中力向上\n- サーブ前のルーティン確立、腹式呼吸法\n\n### B. 実戦確認システム\n- サーブのトス位置\n- 体の回転量\n- 手首の使い方\n- スピン量\n- 安定性をチェック\n\n## 7. 💡 あなたへのワンポイントアドバイス\n「スピンサーブが上手く打てない原因は、トスの位置とスナップ不足にあります。トスを頭の真上に上げ、スナップを意識したスピンサーブを練習しましょう。具体的な練習メニューとしては、まずはトスとスナップを意識したスローサーブから始め、徐々に速度を上げていきます。週に3回、各セッションで100球を目安に練習し、8週間での改善を目標としてください。ビデオで自分のフォームを確認し、トップ選手と比較することでさらなる理解を深めましょう。」",
+    "one_point_advice": "「スピンサーブが上手く打てない原因は、トスの位置とスナップ不足にあります。トスを頭の真上に上げ、スナップを意識したスピンサーブを練習しましょう。具体的な練習メニューとしては、まずはトスとスナップを意識したスローサーブから始め、徐々に速度を上げていきます。週に3回、各セッションで100球を目安に練習し、8週間での改善を目標としてください。ビデオで自分のフォームを確認し、トップ選手と比較することでさらなる理解を深めましょう。」"
+  },
+  "user_concerns": "スピンサーブが上手く打てません。どんな練習をしたら良いですか？",
+  "preprocessing": {
+    "success": true,
+    "duration": 0,
+    "fps": 30
+  },
+  "pose_detection": {
+    "success": true,
+    "detected_frames": 436,
+    "confidence_avg": 0.0
+  },
+  "technical_analysis": {
+    "knee_movement": {
+      "max_bend_angle": 0.37012717737876305,
+      "max_bend_frame": 274,
+      "timing_score": 8.0,
+      "depth_score": 9.0,
+      "overall_score": 8.5,
+      "issues": [
+        "膝の曲げが早すぎます",
+        "膝の曲げが深すぎます"
+      ],
+      "recommendations": [
+        "膝の曲げを少し浅くして、バランスを保ちましょう",
+        "トスと同時に膝を曲げ始めるタイミングを練習しましょう"
+      ]
+    },
+    "elbow_position": {
+      "average_height": 0.5,
+      "shoulder_relative_position": 0,
+      "height_score": 10.0,
+      "stability_score": 8.0,
+      "overall_score": 9.0,
+      "issues": [
+        "肘の動きが不安定です"
+      ],
+      "recommendations": [
+        "肘の軌道を安定させるため、ゆっくりとした練習から始めましょう"
+      ]
+    },
+    "toss_trajectory": {
+      "max_height": 1.03442969545722,
+      "forward_distance": 0.06408575177192688,
+      "consistency_score": 0.24525550724025447,
+      "height_score": 9.0,
+      "distance_score": 10.0,
+      "overall_score": 7.150851690800849,
+      "issues": [
+        "トスが高すぎます",
+        "トスの軌道が不安定です"
+      ],
+      "recommendations": [
+        "トスの高さを少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "body_rotation": {
+      "max_shoulder_rotation": 179.96566860313624,
+      "max_hip_rotation": 179.92746447183015,
+      "shoulder_score": 9.0,
+      "hip_score": 9.0,
+      "overall_score": 9.0,
+      "issues": [
+        "肩の回転が過度です",
+        "腰の回転が過度です"
+      ],
+      "recommendations": [
+        "肩の回転を少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "timing": {
+      "total_duration": 21.366666666666667,
+      "phase_scores": {
+        "preparation": 4.0,
+        "ball_toss": 4.0,
+        "trophy_position": 4.0,
+        "acceleration": 6.0,
+        "contact": 10.0,
+        "follow_through": 4.0
+      },
+      "overall_score": 5.333333333333333,
+      "issues": [
+        "preparationフェーズが長すぎます",
+        "ball_tossフェーズが短すぎます",
+        "trophy_positionフェーズが短すぎます",
+        "follow_throughフェーズが長すぎます"
+      ],
+      "recommendations": [
+        "各フェーズのタイミングを意識して、リズムの良いサーブを心がけましょう",
+        "メトロノームを使った練習で、一定のリズムを身につけましょう"
+      ]
+    }
+  },
+  "serve_phases": {
+    "preparation": {
+      "start_frame": 0,
+      "end_frame": 408,
+      "duration": 13.6,
+      "key_events": [
+        "stance_setup",
+        "initial_position"
+      ]
+    },
+    "ball_toss": {
+      "start_frame": 408,
+      "end_frame": 433,
+      "duration": 0.8333333333333334,
+      "key_events": [
+        "toss_initiation",
+        "ball_release"
+      ]
+    },
+    "trophy_position": {
+      "start_frame": 433,
+      "end_frame": 107,
+      "duration": -10.866666666666667,
+      "key_events": [
+        "trophy_formation",
+        "weight_transfer"
+      ]
+    },
+    "acceleration": {
+      "start_frame": 107,
+      "end_frame": 119,
+      "duration": 0.4,
+      "key_events": [
+        "racket_acceleration",
+        "kinetic_chain"
+      ]
+    },
+    "contact": {
+      "start_frame": 119,
+      "end_frame": 122,
+      "duration": 0.1,
+      "key_events": [
+        "ball_contact",
+        "maximum_reach"
+      ]
+    },
+    "follow_through": {
+      "start_frame": 122,
+      "end_frame": 640,
+      "duration": 17.266666666666666,
+      "key_events": [
+        "deceleration",
+        "landing"
+      ]
+    }
+  }
+}
