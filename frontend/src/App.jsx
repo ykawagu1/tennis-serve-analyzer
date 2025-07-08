@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import './App.css';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://192.168.10.105:5000';
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -192,6 +192,7 @@ function App() {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        timeout: 180000, // タイムアウトを3分(180000ミリ秒)に設定
         onUploadProgress: (progressEvent) => {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           setUploadProgress(progress);
