@@ -223,7 +223,7 @@ class PoseDetector:
                 if landmark['visibility'] > 0.5:
                     x = int(landmark['x'] * width)
                     y = int(landmark['y'] * height)
-                    cv2.circle(annotated_frame, (x, y), 5, (0, 255, 0), -1)
+                    cv2.circle(annotated_frame, (x, y), 10, (0, 255, 0), -1)
         
         # 骨格線を描画
         connections = [
@@ -251,7 +251,7 @@ class PoseDetector:
                 end_x = int(landmarks[end_point]['x'] * width)
                 end_y = int(landmarks[end_point]['y'] * height)
                 
-                cv2.line(annotated_frame, (start_x, start_y), (end_x, end_y), (255, 0, 0), 2)
+                cv2.line(annotated_frame, (start_x, start_y), (end_x, end_y), (255, 0, 0), 6)
         
         return annotated_frame
     
