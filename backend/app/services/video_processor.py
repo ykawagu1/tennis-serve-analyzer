@@ -29,10 +29,14 @@ class VideoProcessor:
         self.temp_dir = tempfile.mkdtemp(prefix='tennis_analyzer_')
         
         # 動画品質設定
-        self.target_fps = 30
-        self.target_resolution = (1280, 720)  # HD解像度
-        self.max_duration = 30  # 最大30秒
-    
+        #最高精度
+        #self.target_fps = 30
+        #self.target_resolution = (1280, 720)  # HD解像度
+        #self.max_duration = 30  # 最大30秒
+        #以下が軽量化版
+        self.target_fps = 20
+        self.target_resolution = (960, 540)
+
     def __del__(self):
         """デストラクタ - 一時ディレクトリのクリーンアップ"""
         if hasattr(self, 'temp_dir') and os.path.exists(self.temp_dir):
@@ -142,8 +146,11 @@ class VideoProcessor:
         except Exception as e:
             print(f"メタデータ取得エラー: {e}")
             return None
+    #高精度版
+    #def extract_frames(self, video_path: str, max_frames: int = 300) -> List[np.ndarray]:
+    #以下軽量化版
+    def extract_frames(self, video_path: str, max_frames: int = 200) -> List[np.ndarray]:
     
-    def extract_frames(self, video_path: str, max_frames: int = 300) -> List[np.ndarray]:
         """
         動画からフレームを抽出
         

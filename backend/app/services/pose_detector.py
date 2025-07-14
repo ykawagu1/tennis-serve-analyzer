@@ -15,10 +15,17 @@ import os
 class PoseDetector:
     """MediaPipeを使用したポーズ検出クラス"""
     
+    #高精度版
+    #def __init__(self, 
+    #             model_complexity: int = 2,
+    #             min_detection_confidence: float = 0.5,
+    #             min_tracking_confidence: float = 0.5):
+    #以下軽量化版
     def __init__(self, 
-                 model_complexity: int = 2,
-                 min_detection_confidence: float = 0.5,
-                 min_tracking_confidence: float = 0.5):
+             model_complexity: int = 1,  # 2→1に変更
+             min_detection_confidence: float = 0.4,
+             min_tracking_confidence: float = 0.4):
+
         """
         ポーズ検出器の初期化
         
