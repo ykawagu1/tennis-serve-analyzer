@@ -1,0 +1,208 @@
+{
+  "total_score": 6.804587470604393,
+  "frame_count": 51,
+  "phase_analysis": {
+    "準備フェーズ": {
+      "score": 7.0
+    },
+    "トスフェーズ": {
+      "score": 4.5583609151404
+    },
+    "バックスイングフェーズ": {
+      "score": 8.0
+    },
+    "インパクトフェーズ": {
+      "score": 7.0
+    },
+    "フォロースルーフェーズ": {
+      "score": 7.75
+    }
+  },
+  "advice": {
+    "overall_advice": "フォームに改善の余地があります。基礎から見直しましょう。",
+    "technical_points": [],
+    "practice_suggestions": [],
+    "enhanced": false,
+    "detailed_advice": "## 総合評価\nフォームに改善の余地があります。基礎から見直しましょう。\n\n## 技術的改善ポイント\n\n## 練習提案\n"
+  },
+  "user_concerns": "",
+  "preprocessing": {
+    "success": true,
+    "duration": 0,
+    "fps": 30
+  },
+  "pose_detection": {
+    "success": true,
+    "detected_frames": 50,
+    "confidence_avg": 0.0
+  },
+  "technical_analysis": {
+    "knee_movement": {
+      "max_bend_angle": 0.2937093217430401,
+      "max_bend_frame": 24,
+      "timing_score": 8.0,
+      "depth_score": 6.0,
+      "overall_score": 7.0,
+      "issues": [
+        "膝の曲げが遅すぎます",
+        "膝の曲げが大幅に深すぎます"
+      ],
+      "recommendations": [
+        "膝の曲げを少し浅くして、バランスを保ちましょう",
+        "もう少し早めに膝を曲げ始めましょう"
+      ]
+    },
+    "elbow_position": {
+      "average_height": 0.5,
+      "shoulder_relative_position": 0,
+      "height_score": 10.0,
+      "stability_score": 6.0,
+      "overall_score": 8.0,
+      "issues": [
+        "肘の動きが大幅に不安定です"
+      ],
+      "recommendations": []
+    },
+    "toss_trajectory": {
+      "max_height": 0.9089539498090744,
+      "forward_distance": 0.32836592197418213,
+      "consistency_score": 0.16750827454212025,
+      "height_score": 6.0,
+      "distance_score": 6.0,
+      "overall_score": 4.5583609151404,
+      "issues": [
+        "トスが大幅に高すぎます",
+        "トスが大幅に前方に行きすぎています",
+        "トスの軌道が大幅に不安定です"
+      ],
+      "recommendations": [
+        "トスの高さを少し抑えて、コントロールを向上させましょう",
+        "トスの前方距離を抑えて、バランスを保ちましょう"
+      ]
+    },
+    "body_rotation": {
+      "max_shoulder_rotation": 179.10792687180637,
+      "max_hip_rotation": 177.7965871445914,
+      "shoulder_score": 7.0,
+      "hip_score": 7.0,
+      "overall_score": 7.0,
+      "issues": [
+        "肩の回転が過度です",
+        "腰の回転が過度です"
+      ],
+      "recommendations": [
+        "肩の回転を少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "timing": {
+      "total_duration": 1.7,
+      "phase_scores": {
+        "preparation": 5.5,
+        "ball_toss": 2.0,
+        "trophy_position": 2.0,
+        "acceleration": 7.0,
+        "contact": 10.0,
+        "follow_through": 5.5
+      },
+      "overall_score": 5.333333333333333,
+      "issues": [
+        "ball_tossフェーズが長すぎます",
+        "trophy_positionフェーズが短すぎます"
+      ],
+      "recommendations": [
+        "各フェーズのタイミングを意識して、リズムの良いサーブを心がけましょう",
+        "メトロノームを使った練習で、一定のリズムを身につけましょう"
+      ]
+    },
+    "follow_through": {
+      "swing_completion": {
+        "score": 10.0,
+        "completion_rate": 1.0,
+        "horizontal_movement": 0.39148569107055664,
+        "vertical_movement": 0.15435343980789185
+      },
+      "body_rotation_completion": {
+        "score": 5.0,
+        "final_rotation": 36.341996784177184,
+        "max_rotation": 179.10792687180637,
+        "rotation_consistency": 0.034292234603731875
+      },
+      "balance_maintenance": {
+        "score": 6.0,
+        "left_stability": 0.0,
+        "right_stability": 0.0,
+        "overall_stability": 0.0
+      },
+      "racket_path": {
+        "score": 10.0,
+        "path_smoothness": 0.8148708749755406,
+        "path_quality": 0.8148708749755406
+      },
+      "overall_score": 7.75,
+      "issues": [
+        "体の回転が不完全です",
+        "バランスの維持に問題があります"
+      ],
+      "recommendations": [
+        "フォロースルーの完成度を高めましょう",
+        "バランスを保ちながらの振り抜きを練習しましょう"
+      ]
+    }
+  },
+  "serve_phases": {
+    "preparation": {
+      "start_frame": 0,
+      "end_frame": 1,
+      "duration": 0.03333333333333333,
+      "key_events": [
+        "stance_setup",
+        "initial_position"
+      ]
+    },
+    "ball_toss": {
+      "start_frame": 1,
+      "end_frame": 23,
+      "duration": 0.7333333333333333,
+      "key_events": [
+        "toss_initiation",
+        "ball_release"
+      ]
+    },
+    "trophy_position": {
+      "start_frame": 23,
+      "end_frame": 19,
+      "duration": -0.13333333333333333,
+      "key_events": [
+        "trophy_formation",
+        "weight_transfer"
+      ]
+    },
+    "acceleration": {
+      "start_frame": 19,
+      "end_frame": 31,
+      "duration": 0.4,
+      "key_events": [
+        "racket_acceleration",
+        "kinetic_chain"
+      ]
+    },
+    "contact": {
+      "start_frame": 31,
+      "end_frame": 34,
+      "duration": 0.1,
+      "key_events": [
+        "ball_contact",
+        "maximum_reach"
+      ]
+    },
+    "follow_through": {
+      "start_frame": 34,
+      "end_frame": 50,
+      "duration": 0.5333333333333333,
+      "key_events": [
+        "deceleration",
+        "landing"
+      ]
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "total_score": 7.195796802486752,
+  "frame_count": 129,
+  "phase_analysis": {
+    "準備フェーズ": {
+      "score": 7.0
+    },
+    "トスフェーズ": {
+      "score": 6.5
+    },
+    "バックスイングフェーズ": {
+      "score": 7.5
+    },
+    "インパクトフェーズ": {
+      "score": 8.0
+    },
+    "フォロースルーフェーズ": {
+      "score": 7.2
+    }
+  },
+  "advice": {
+    "overall_advice": "フォームに改善の余地があります。基礎から見直しましょう。",
+    "technical_points": [],
+    "practice_suggestions": [],
+    "enhanced": false,
+    "detailed_advice": "## 総合評価\nフォームに改善の余地があります。基礎から見直しましょう。\n\n## 技術的改善ポイント\n\n## 練習提案\n"
+  },
+  "user_concerns": "",
+  "tiered_evaluation": {
+    "skill_level": "intermediate",
+    "skill_level_name": "中級者",
+    "expected_score_range": [
+      5.0,
+      7.0
+    ],
+    "total_score": 6.4625,
+    "component_scores": {
+      "knee_movement": 0.325,
+      "elbow_position": 1.3,
+      "body_rotation": 1.95,
+      "toss_trajectory": 0.975,
+      "follow_through": 1.4125,
+      "timing": 0.5
+    },
+    "evaluation_notes": [
+      "技術レベル: 中級者",
+      "期待スコア範囲: 5.0-7.0点",
+      "✅ 期待範囲内の適切な技術レベルです",
+      "📈 中級者として着実な技術を身につけています"
+    ],
+    "is_tiered_evaluation": true
+  },
+  "preprocessing": {
+    "success": true,
+    "duration": 0,
+    "fps": 30
+  },
+  "pose_detection": {
+    "success": true,
+    "detected_frames": 88,
+    "confidence_avg": 0.0
+  },
+  "technical_analysis": {},
+  "serve_phases": [
+    {
+      "name": "preparation",
+      "start_frame": 0,
+      "end_frame": 19,
+      "duration": 0.6333333333333333,
+      "key_events": [
+        "preparation_start",
+        "preparation_end"
+      ]
+    },
+    {
+      "name": "ball_toss",
+      "start_frame": 20,
+      "end_frame": 45,
+      "duration": 0.8333333333333334,
+      "key_events": [
+        "ball_toss_start",
+        "ball_toss_end"
+      ]
+    },
+    {
+      "name": "trophy_position",
+      "start_frame": 46,
+      "end_frame": 78,
+      "duration": 1.0666666666666667,
+      "key_events": [
+        "trophy_position_start",
+        "trophy_position_end"
+      ]
+    },
+    {
+      "name": "acceleration",
+      "start_frame": 79,
+      "end_frame": 98,
+      "duration": 0.6333333333333333,
+      "key_events": [
+        "acceleration_start",
+        "acceleration_end"
+      ]
+    },
+    {
+      "name": "contact",
+      "start_frame": 99,
+      "end_frame": 105,
+      "duration": 0.2,
+      "key_events": [
+        "contact_start",
+        "contact_end"
+      ]
+    },
+    {
+      "name": "follow_through",
+      "start_frame": 106,
+      "end_frame": 128,
+      "duration": 0.8333333333333334,
+      "key_events": [
+        "follow_through_start",
+        "follow_through_end"
+      ]
+    }
+  ]
+}

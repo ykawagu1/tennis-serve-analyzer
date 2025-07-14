@@ -1,0 +1,234 @@
+{
+  "total_score": 6.001369297740644,
+  "frame_count": 90,
+  "phase_analysis": {
+    "準備フェーズ": {
+      "score": 6.0
+    },
+    "トスフェーズ": {
+      "score": 5.592461984937629
+    },
+    "バックスイングフェーズ": {
+      "score": 8.0
+    },
+    "インパクトフェーズ": {
+      "score": 5.0
+    },
+    "フォロースルーフェーズ": {
+      "score": 5.95
+    }
+  },
+  "advice": {
+    "overall_advice": "フォームに改善の余地があります。基礎から見直しましょう。",
+    "technical_points": [],
+    "practice_suggestions": [],
+    "enhanced": false,
+    "detailed_advice": "## 総合評価\nフォームに改善の余地があります。基礎から見直しましょう。\n\n## 技術的改善ポイント\n\n## 練習提案\n"
+  },
+  "user_concerns": "",
+  "tiered_evaluation": {
+    "skill_level": "intermediate",
+    "skill_level_name": "中級者",
+    "expected_score_range": [
+      5.0,
+      7.0
+    ],
+    "total_score": 7.2225,
+    "component_scores": {
+      "knee_movement": 0.30000000000000004,
+      "elbow_position": 2.04,
+      "body_rotation": 1.7999999999999998,
+      "toss_trajectory": 1.32,
+      "follow_through": 1.4875,
+      "timing": 0.275
+    },
+    "evaluation_notes": [
+      "技術レベル: 中級者",
+      "期待スコア範囲: 5.0-7.0点",
+      "✅ 期待範囲を上回る優秀な技術です",
+      "📈 中級者として着実な技術を身につけています"
+    ],
+    "is_tiered_evaluation": true
+  },
+  "preprocessing": {
+    "success": true,
+    "duration": 0,
+    "fps": 30
+  },
+  "pose_detection": {
+    "success": true,
+    "detected_frames": 90,
+    "confidence_avg": 0.0
+  },
+  "technical_analysis": {
+    "knee_movement": {
+      "max_bend_angle": 60.84659676489575,
+      "max_bend_frame": 38,
+      "timing_score": 8.0,
+      "depth_score": 4.0,
+      "overall_score": 6.0,
+      "issues": [
+        "膝の曲げが早すぎます",
+        "膝の曲げが大幅に深すぎます"
+      ],
+      "recommendations": [
+        "膝の曲げを少し浅くして、バランスを保ちましょう",
+        "トスと同時に膝を曲げ始めるタイミングを練習しましょう"
+      ]
+    },
+    "elbow_position": {
+      "average_height": 0.5,
+      "shoulder_relative_position": 0,
+      "height_score": 10.0,
+      "stability_score": 6.0,
+      "overall_score": 8.0,
+      "issues": [
+        "肘の動きが大幅に不安定です"
+      ],
+      "recommendations": []
+    },
+    "toss_trajectory": {
+      "max_height": 0.6383234560489655,
+      "forward_distance": 0.026452630758285522,
+      "consistency_score": 0.177738595481289,
+      "height_score": 9.0,
+      "distance_score": 6.0,
+      "overall_score": 5.592461984937629,
+      "issues": [
+        "トスがやや高いです",
+        "トスの前方への投げが大幅に不足しています",
+        "トスの軌道が大幅に不安定です"
+      ],
+      "recommendations": [
+        "トスをもう少し前方に投げて、効果的な打点を作りましょう"
+      ]
+    },
+    "body_rotation": {
+      "max_shoulder_rotation": 179.76401189281495,
+      "max_hip_rotation": 179.72757097636904,
+      "shoulder_score": 5.0,
+      "hip_score": 5.0,
+      "overall_score": 5.0,
+      "issues": [
+        "肩の回転が過度です",
+        "腰の回転が過度です"
+      ],
+      "recommendations": [
+        "肩の回転を少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "timing": {
+      "total_duration": 3.0,
+      "phase_scores": {
+        "preparation": 2.0,
+        "ball_toss": 7.0,
+        "trophy_position": 2.0,
+        "acceleration": 10.0,
+        "contact": 10.0,
+        "follow_through": 2.0
+      },
+      "overall_score": 5.5,
+      "issues": [
+        "preparationフェーズが長すぎます",
+        "trophy_positionフェーズが短すぎます",
+        "follow_throughフェーズが長すぎます"
+      ],
+      "recommendations": [
+        "各フェーズのタイミングを意識して、リズムの良いサーブを心がけましょう",
+        "メトロノームを使った練習で、一定のリズムを身につけましょう"
+      ]
+    },
+    "follow_through": {
+      "swing_completion": {
+        "score": 5.0,
+        "completion_rate": 0.2493258317311605,
+        "horizontal_movement": 0.02561253309249878,
+        "vertical_movement": 0.049185216426849365
+      },
+      "body_rotation_completion": {
+        "score": 5.0,
+        "final_rotation": 0.38066916937185113,
+        "max_rotation": 179.76401189281495,
+        "rotation_consistency": 0.0
+      },
+      "balance_maintenance": {
+        "score": 6.0,
+        "left_stability": 0.25658691310804893,
+        "right_stability": 0.0,
+        "overall_stability": 0.12829345655402447
+      },
+      "racket_path": {
+        "score": 8.5,
+        "path_smoothness": 0.6126732734115041,
+        "path_quality": 0.6126732734115041
+      },
+      "overall_score": 5.95,
+      "issues": [
+        "ラケットの振り抜きが不完全です",
+        "体の回転が不完全です",
+        "バランスの維持に問題があります"
+      ],
+      "recommendations": [
+        "フォロースルーの基本動作を見直しましょう",
+        "ラケットを体の左側まで完全に振り抜く練習をしましょう",
+        "体の回転を最後まで完了させる意識を持ちましょう"
+      ]
+    }
+  },
+  "serve_phases": {
+    "preparation": {
+      "start_frame": 0,
+      "end_frame": 53,
+      "duration": 1.7666666666666666,
+      "key_events": [
+        "stance_setup",
+        "initial_position"
+      ]
+    },
+    "ball_toss": {
+      "start_frame": 53,
+      "end_frame": 78,
+      "duration": 0.8333333333333334,
+      "key_events": [
+        "toss_initiation",
+        "ball_release"
+      ]
+    },
+    "trophy_position": {
+      "start_frame": 78,
+      "end_frame": 31,
+      "duration": -1.5666666666666667,
+      "key_events": [
+        "trophy_formation",
+        "weight_transfer"
+      ]
+    },
+    "acceleration": {
+      "start_frame": 31,
+      "end_frame": 43,
+      "duration": 0.4,
+      "key_events": [
+        "racket_acceleration",
+        "kinetic_chain"
+      ]
+    },
+    "contact": {
+      "start_frame": 43,
+      "end_frame": 46,
+      "duration": 0.1,
+      "key_events": [
+        "ball_contact",
+        "maximum_reach"
+      ]
+    },
+    "follow_through": {
+      "start_frame": 46,
+      "end_frame": 89,
+      "duration": 1.4333333333333333,
+      "key_events": [
+        "deceleration",
+        "landing"
+      ]
+    }
+  }
+}

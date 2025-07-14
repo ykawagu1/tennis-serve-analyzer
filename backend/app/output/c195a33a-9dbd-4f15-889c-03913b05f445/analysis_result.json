@@ -1,0 +1,235 @@
+{
+  "total_score": 6.001369297740644,
+  "frame_count": 90,
+  "phase_analysis": {
+    "準備フェーズ": {
+      "score": 6.0
+    },
+    "トスフェーズ": {
+      "score": 5.592461984937629
+    },
+    "バックスイングフェーズ": {
+      "score": 8.0
+    },
+    "インパクトフェーズ": {
+      "score": 5.0
+    },
+    "フォロースルーフェーズ": {
+      "score": 5.95
+    }
+  },
+  "advice": {
+    "summary": "フォームに改善の余地があります。基礎から見直しましょう。",
+    "improvements": [],
+    "drills": [],
+    "enhanced": true,
+    "detailed_advice": "【1. 🏆 総合技術評価】  \nあなたのサービスは基礎的な動作はできているものの、トップレベルの選手と比較すると、安定性とパワーの面で不足しています。フェデラーやジョコビッチの洗練された動きと比べると、動作の連動性やタイミングに改善余地があります。特にリズムと体幹の回転制御を強化すれば、より一層のレベルアップが可能です。\n\n【2. 🔬 バイオメカニクス分析】  \n・スタンスの広さ：現在約25cm、理想は約35cm。広いスタンスは重心安定とパワー伝達に不可欠。ゆっくりと足を広げ、地面を押す感覚を養う。  \n・肘の位置・高さ：現状肘が低め（腰より下）、理想は肩とほぼ同じ高さ。高い肘はラケットコントロールとパワー効率を向上させるため、腕の位置を意識し、肩の高さに持ち上げる。  \n・膝の曲げ角度：約140度、理想は約150度。膝を適度に曲げ、ジャンプ力と安定性を高める。スクワット動作で角度調整を行う。  \n・手首の使い方：手首が過剰に動きすぎている、または硬直している。理想はリラックスした状態で、スナップを効かせる。手首の柔軟性を意識したドリルを取り入れる。  \n・フォロースルーの姿勢：体が前方に傾きすぎている。理想は横向きの姿勢を保ち、体軸を維持しながら自然な流れでフィニッシュ。体重を前足にしっかり乗せることを心掛ける。\n\n【3. 🏅 世界トップ選手比較】  \nフェデラーは流れるような滑らかな動きと高い安定性、ジョコビッチは粘り強い体幹制御と柔軟性、ナダルはパワーとフィニッシュの強さが特徴。あなたはこれらの選手の動作を模倣しつつ、特に体幹と連動性を意識した練習を積むことが到達目標です。トップ選手は動作の一体感とタイミング管理に優れています。\n\n【4. 🎯 8週間改善プログラム】  \n・第1-2週（基礎修正期）：正しいスタンスとトスの位置、肘の高さ、体重移動の基本動作を反復練習。鏡やビデオを使い自己確認。  \n・第3-4週（技術統合期）：これまでの基礎練習に加え、動作の連動性とタイミングを意識したサーブドリルを導入。実践的なフォームチェックも行う。  \n・第5-6週（実戦応用期）：練習試合やポイント練習を通じて、フォームの安定性とパワーを向上。状況に応じたコントロールも意識させる。  \n・第7-8週（完成期）：動作の最適化と反復練習を徹底。ビデオ分析とコーチングを活用し、フィニッシュまでの一連の流れを磨き上げる。\n\n【5. 🏋️ 専門フィジカル強化プログラム】  \n### A. 下半身パワー強化（週3回）  \n• スクワット（バーベル60-80kg）×12回×3セット  \n• プライオメトリクス：ボックスジャンプ×8回×3セット、バウンスジャンプ×10回×3セット  \n\n### B. 体幹安定化（週4回）  \n• プランク（前・側面）60秒×3セット  \n• ローテーション系：ロシアンツイスト×20回×3セット、マウンテンクライマー×30回×3セット  \n\n### C. 上半身連動性（週2回）  \n• 肩甲骨ストレッチ：肩甲骨の可動域向上種目×15回×3セット  \n• ローテーターカフ：軽負荷ダンベル（2-3kg）×15回×3セット  \n\n【6. 🧠 メンタル・戦術強化】  \n### A. 集中力向上  \nルーティンはサーブ前に深呼吸→ウォームアップ動作→視線固定→リズム確認→最後に深呼吸。呼吸法は深くゆっくりと6秒吸い、6秒吐く。  \n### B. 実戦確認システム  \n練習中のチェックリスト：  \n• [ ] 膝角度: 155-165度をキープ  \n• [ ] 肘高さ: 肩より+8-12cm高い状態を維持  \n• [ ] トス位置: 前方12-15cm、右側5-8cmを意識  \n• [ ] 体重移動: 0.3-0.4秒で完了させる  \n• [ ] フォロースルー: 体を横切る軌道を保つ\n\nこれらのポイントを意識し、計画的に練習とトレーニングを行えば、持続的な改善とトップレベルへの到達が期待できます。",
+    "user_concerns": ""
+  },
+  "user_concerns": "",
+  "tiered_evaluation": {
+    "skill_level": "intermediate",
+    "skill_level_name": "中級者",
+    "expected_score_range": [
+      5.0,
+      7.0
+    ],
+    "total_score": 7.2225,
+    "component_scores": {
+      "knee_movement": 0.30000000000000004,
+      "elbow_position": 2.04,
+      "body_rotation": 1.7999999999999998,
+      "toss_trajectory": 1.32,
+      "follow_through": 1.4875,
+      "timing": 0.275
+    },
+    "evaluation_notes": [
+      "技術レベル: 中級者",
+      "期待スコア範囲: 5.0-7.0点",
+      "✅ 期待範囲を上回る優秀な技術です",
+      "📈 中級者として着実な技術を身につけています"
+    ],
+    "is_tiered_evaluation": true
+  },
+  "preprocessing": {
+    "success": true,
+    "duration": 0,
+    "fps": 30
+  },
+  "pose_detection": {
+    "success": true,
+    "detected_frames": 90,
+    "confidence_avg": 0.0
+  },
+  "technical_analysis": {
+    "knee_movement": {
+      "max_bend_angle": 60.84659676489575,
+      "max_bend_frame": 38,
+      "timing_score": 8.0,
+      "depth_score": 4.0,
+      "overall_score": 6.0,
+      "issues": [
+        "膝の曲げが早すぎます",
+        "膝の曲げが大幅に深すぎます"
+      ],
+      "recommendations": [
+        "膝の曲げを少し浅くして、バランスを保ちましょう",
+        "トスと同時に膝を曲げ始めるタイミングを練習しましょう"
+      ]
+    },
+    "elbow_position": {
+      "average_height": 0.5,
+      "shoulder_relative_position": 0,
+      "height_score": 10.0,
+      "stability_score": 6.0,
+      "overall_score": 8.0,
+      "issues": [
+        "肘の動きが大幅に不安定です"
+      ],
+      "recommendations": []
+    },
+    "toss_trajectory": {
+      "max_height": 0.6383234560489655,
+      "forward_distance": 0.026452630758285522,
+      "consistency_score": 0.177738595481289,
+      "height_score": 9.0,
+      "distance_score": 6.0,
+      "overall_score": 5.592461984937629,
+      "issues": [
+        "トスがやや高いです",
+        "トスの前方への投げが大幅に不足しています",
+        "トスの軌道が大幅に不安定です"
+      ],
+      "recommendations": [
+        "トスをもう少し前方に投げて、効果的な打点を作りましょう"
+      ]
+    },
+    "body_rotation": {
+      "max_shoulder_rotation": 179.76401189281495,
+      "max_hip_rotation": 179.72757097636904,
+      "shoulder_score": 5.0,
+      "hip_score": 5.0,
+      "overall_score": 5.0,
+      "issues": [
+        "肩の回転が過度です",
+        "腰の回転が過度です"
+      ],
+      "recommendations": [
+        "肩の回転を少し抑えて、コントロールを向上させましょう"
+      ]
+    },
+    "timing": {
+      "total_duration": 3.0,
+      "phase_scores": {
+        "preparation": 2.0,
+        "ball_toss": 7.0,
+        "trophy_position": 2.0,
+        "acceleration": 10.0,
+        "contact": 10.0,
+        "follow_through": 2.0
+      },
+      "overall_score": 5.5,
+      "issues": [
+        "preparationフェーズが長すぎます",
+        "trophy_positionフェーズが短すぎます",
+        "follow_throughフェーズが長すぎます"
+      ],
+      "recommendations": [
+        "各フェーズのタイミングを意識して、リズムの良いサーブを心がけましょう",
+        "メトロノームを使った練習で、一定のリズムを身につけましょう"
+      ]
+    },
+    "follow_through": {
+      "swing_completion": {
+        "score": 5.0,
+        "completion_rate": 0.2493258317311605,
+        "horizontal_movement": 0.02561253309249878,
+        "vertical_movement": 0.049185216426849365
+      },
+      "body_rotation_completion": {
+        "score": 5.0,
+        "final_rotation": 0.38066916937185113,
+        "max_rotation": 179.76401189281495,
+        "rotation_consistency": 0.0
+      },
+      "balance_maintenance": {
+        "score": 6.0,
+        "left_stability": 0.25658691310804893,
+        "right_stability": 0.0,
+        "overall_stability": 0.12829345655402447
+      },
+      "racket_path": {
+        "score": 8.5,
+        "path_smoothness": 0.6126732734115041,
+        "path_quality": 0.6126732734115041
+      },
+      "overall_score": 5.95,
+      "issues": [
+        "ラケットの振り抜きが不完全です",
+        "体の回転が不完全です",
+        "バランスの維持に問題があります"
+      ],
+      "recommendations": [
+        "フォロースルーの基本動作を見直しましょう",
+        "ラケットを体の左側まで完全に振り抜く練習をしましょう",
+        "体の回転を最後まで完了させる意識を持ちましょう"
+      ]
+    }
+  },
+  "serve_phases": {
+    "preparation": {
+      "start_frame": 0,
+      "end_frame": 53,
+      "duration": 1.7666666666666666,
+      "key_events": [
+        "stance_setup",
+        "initial_position"
+      ]
+    },
+    "ball_toss": {
+      "start_frame": 53,
+      "end_frame": 78,
+      "duration": 0.8333333333333334,
+      "key_events": [
+        "toss_initiation",
+        "ball_release"
+      ]
+    },
+    "trophy_position": {
+      "start_frame": 78,
+      "end_frame": 31,
+      "duration": -1.5666666666666667,
+      "key_events": [
+        "trophy_formation",
+        "weight_transfer"
+      ]
+    },
+    "acceleration": {
+      "start_frame": 31,
+      "end_frame": 43,
+      "duration": 0.4,
+      "key_events": [
+        "racket_acceleration",
+        "kinetic_chain"
+      ]
+    },
+    "contact": {
+      "start_frame": 43,
+      "end_frame": 46,
+      "duration": 0.1,
+      "key_events": [
+        "ball_contact",
+        "maximum_reach"
+      ]
+    },
+    "follow_through": {
+      "start_frame": 46,
+      "end_frame": 89,
+      "duration": 1.4333333333333333,
+      "key_events": [
+        "deceleration",
+        "landing"
+      ]
+    }
+  }
+}

@@ -1,5 +1,5 @@
 """
-テニスサービス動作解析 - ポーズ検出サービス
+テニスサービス動作解析 - ポーズ検出サービス（detect_posesメソッド追加版）
 MediaPipeを使用した人体ポーズ検出機能
 """
 
@@ -9,6 +9,7 @@ import numpy as np
 from typing import Dict, List, Optional, Tuple
 import json
 import time
+import os
 
 
 class PoseDetector:
@@ -75,6 +76,41 @@ class PoseDetector:
             'right_foot_index': 32
         }
     
+    def detect_poses(self, video_path: str, output_dir: str) -> List[Dict]:
+        """
+        動画からポーズを検出（main.pyから呼び出されるメインメソッド）
+        
+        Args:
+            video_path: 入力動画ファイルパス
+            output_dir: 出力ディレクトリ
+            
+        Returns:
+            全フレームのポーズ検出結果リスト
+        """
+        try:
+            print(f"ポーズ検出開始: {video_path}")
+            
+            # 出力ファイルパスを決定
+            output_video_path = os.path.join(output_dir, f"pose_detected_{int(time.time())}.mp4")
+            output_json_path = os.path.join(output_dir, f"pose_data_{int(time.time())}.json")
+            
+            # 動画全体のポーズ検出を実行
+            pose_results = self.process_video(video_path, output_video_path)
+            
+            # 結果をJSONファイルに保存
+            self.save_pose_data(pose_results, output_json_path)
+            
+            print(f"ポーズ検出完了: {len(pose_results)}フレーム処理")
+            print(f"出力動画: {output_video_path}")
+            print(f"出力データ: {output_json_path}")
+            
+            return pose_results
+            
+        except Exception as e:
+            print(f"ポーズ検出エラー: {e}")
+            # エラーの場合は空のリストを返す（フォールバック）
+            return []
+    
     def detect_pose(self, frame: np.ndarray, frame_number: int = 0, timestamp: float = 0.0) -> Dict:
         """
         単一フレームのポーズ検出
@@ -106,22 +142,20 @@ class PoseDetector:
         if results.pose_landmarks:
             pose_data['has_pose'] = True
             
-            # 各ランドマークの座標と可視性を抽出
-            for name, idx in self.key_landmarks.items():
-                if idx < len(results.pose_landmarks.landmark):
-                    landmark = results.pose_landmarks.landmark[idx]
-                    pose_data['landmarks'][name] = {
+            # ランドマークデータを抽出
+            for landmark_name, landmark_idx in self.key_landmarks.items():
+                if landmark_idx < len(results.pose_landmarks.landmark):
+                    landmark = results.pose_landmarks.landmark[landmark_idx]
+                    pose_data['landmarks'][landmark_name] = {
                         'x': landmark.x,
                         'y': landmark.y,
-                        'z': landmark.z,
-                        'visibility': landmark.visibility
+                        'z': landmark.z
                     }
-                    pose_data['visibility_scores'][name] = landmark.visibility
+                    pose_data['visibility_scores'][landmark_name] = landmark.visibility
             
-            # 全体的な検出信頼度を計算
-            visible_landmarks = [v for v in pose_data['visibility_scores'].values() if v > 0.5]
-            if visible_landmarks:
-                pose_data['detection_confidence'] = sum(visible_landmarks) / len(visible_landmarks)
+            # 検出信頼度の計算（可視性スコアの平均）
+            if pose_data['visibility_scores']:
+                pose_data['detection_confidence'] = np.mean(list(pose_data['visibility_scores'].values()))
         
         return pose_data
     
@@ -159,6 +193,10 @@ class PoseDetector:
         frame_number = 0
         
         try:
+            print(f"=== ポーズ検出開始 ===")
+            print(f"動画ファイル: {video_path}")
+            print(f"MediaPipe初期化状況: {self.pose is not None}")
+            
             while True:
                 ret, frame = cap.read()
                 if not ret:
@@ -167,29 +205,48 @@ class PoseDetector:
                 timestamp = frame_number / fps
                 
                 # ポーズ検出実行
-                pose_data = self.detect_pose(frame, frame_number, timestamp)
+                try:
+                    pose_data = self.detect_pose(frame, frame_number, timestamp)
+                except Exception as e:
+                    print(f"フレーム {frame_number}: detect_poseでエラー - {e}")
+                    pose_data = {
+                        'frame_number': frame_number,
+                        'timestamp': timestamp,
+                        'landmarks': {},
+                        'visibility_scores': {},
+                        'detection_confidence': 0.0,
+                        'has_pose': False
+                    }
+                
                 pose_results.append(pose_data)
                 
-                # 可視化（出力動画がある場合）
-                if out is not None and pose_data['has_pose']:
+                # ポーズ描画（出力動画がある場合）
+                if out is not None:
                     annotated_frame = self._draw_pose_landmarks(frame, pose_data)
                     out.write(annotated_frame)
-                elif out is not None:
-                    out.write(frame)
                 
                 frame_number += 1
                 
                 # 進捗表示
                 if frame_number % 30 == 0:
                     progress = (frame_number / frame_count) * 100
-                    print(f"処理進捗: {progress:.1f}% ({frame_number}/{frame_count})")
-        
+                    detected_count = sum(1 for p in pose_results if p['has_pose'])
+                    print(f"ポーズ検出進捗: {progress:.1f}% ({frame_number}/{frame_count}) - 検出成功: {detected_count}")
+                
         finally:
             cap.release()
-            if out:
+            if out is not None:
                 out.release()
         
-        print(f"ポーズ検出完了: {len(pose_results)}フレーム処理")
+        # 統計情報を表示
+        detected_count = sum(1 for p in pose_results if p['has_pose'])
+        detection_rate = (detected_count / len(pose_results)) * 100 if pose_results else 0
+        
+        print(f"=== ポーズ検出完了 ===")
+        print(f"総フレーム数: {len(pose_results)}")
+        print(f"検出成功フレーム: {detected_count}")
+        print(f"検出成功率: {detection_rate:.1f}%")
+        
         return pose_results
     
     def _draw_pose_landmarks(self, frame: np.ndarray, pose_data: Dict) -> np.ndarray:
@@ -198,7 +255,7 @@ class PoseDetector:
         
         Args:
             frame: 入力フレーム
-            pose_data: ポーズ検出結果
+            pose_data: ポーズデータ
             
         Returns:
             ランドマークが描画されたフレーム
@@ -213,17 +270,26 @@ class PoseDetector:
         height, width = frame.shape[:2]
         
         # 主要な関節を描画
-        key_points = ['left_shoulder', 'right_shoulder', 'left_elbow', 'right_elbow',
-                     'left_wrist', 'right_wrist', 'left_hip', 'right_hip',
+        key_points = ['left_shoulder', 'right_shoulder', 'left_elbow', 'right_elbow', 
+                     'left_wrist', 'right_wrist', 'left_hip', 'right_hip', 
                      'left_knee', 'right_knee', 'left_ankle', 'right_ankle']
         
         for point_name in key_points:
             if point_name in landmarks:
                 landmark = landmarks[point_name]
-                if landmark['visibility'] > 0.5:
-                    x = int(landmark['x'] * width)
-                    y = int(landmark['y'] * height)
-                    cv2.circle(annotated_frame, (x, y), 5, (0, 255, 0), -1)
+                x = int(landmark['x'] * width)
+                y = int(landmark['y'] * height)
+                
+                # 可視性に基づいて色を決定
+                visibility = pose_data['visibility_scores'].get(point_name, 0)
+                if visibility > 0.5:
+                    color = (0, 255, 0)  # 緑（高可視性）
+                elif visibility > 0.3:
+                    color = (0, 255, 255)  # 黄（中可視性）
+                else:
+                    color = (0, 0, 255)  # 赤（低可視性）
+                
+                cv2.circle(annotated_frame, (x, y), 5, color, -1)
         
         # 骨格線を描画
         connections = [
@@ -242,16 +308,21 @@ class PoseDetector:
         ]
         
         for start_point, end_point in connections:
-            if (start_point in landmarks and end_point in landmarks and
-                landmarks[start_point]['visibility'] > 0.5 and
-                landmarks[end_point]['visibility'] > 0.5):
+            if start_point in landmarks and end_point in landmarks:
+                start_landmark = landmarks[start_point]
+                end_landmark = landmarks[end_point]
                 
-                start_x = int(landmarks[start_point]['x'] * width)
-                start_y = int(landmarks[start_point]['y'] * height)
-                end_x = int(landmarks[end_point]['x'] * width)
-                end_y = int(landmarks[end_point]['y'] * height)
+                start_x = int(start_landmark['x'] * width)
+                start_y = int(start_landmark['y'] * height)
+                end_x = int(end_landmark['x'] * width)
+                end_y = int(end_landmark['y'] * height)
                 
-                cv2.line(annotated_frame, (start_x, start_y), (end_x, end_y), (255, 0, 0), 2)
+                cv2.line(annotated_frame, (start_x, start_y), (end_x, end_y), (255, 255, 255), 2)
+        
+        # 検出信頼度を表示
+        confidence = pose_data['detection_confidence']
+        cv2.putText(annotated_frame, f'Confidence: {confidence:.2f}', 
+                   (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         
         return annotated_frame
     
@@ -266,11 +337,11 @@ class PoseDetector:
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(pose_results, f, indent=2, ensure_ascii=False)
         
-        print(f"ポーズデータを保存しました: {output_path}")
+        print(f"ポーズデータ保存完了: {output_path}")
     
     def load_pose_data(self, input_path: str) -> List[Dict]:
         """
-        JSONファイルからポーズ検出結果を読み込み
+        JSONファイルからポーズデータを読み込み
         
         Args:
             input_path: 入力ファイルパス
@@ -281,7 +352,7 @@ class PoseDetector:
         with open(input_path, 'r', encoding='utf-8') as f:
             pose_results = json.load(f)
         
-        print(f"ポーズデータを読み込みました: {input_path}")
+        print(f"ポーズデータ読み込み完了: {len(pose_results)}フレーム")
         return pose_results
     
     def get_pose_statistics(self, pose_results: List[Dict]) -> Dict:
@@ -294,74 +365,64 @@ class PoseDetector:
         Returns:
             統計情報の辞書
         """
+        if not pose_results:
+            return {}
+        
         total_frames = len(pose_results)
-        detected_frames = sum(1 for result in pose_results if result['has_pose'])
+        detected_frames = sum(1 for p in pose_results if p['has_pose'])
+        detection_rate = (detected_frames / total_frames) * 100
         
-        if detected_frames == 0:
-            return {
-                'total_frames': total_frames,
-                'detected_frames': 0,
-                'detection_rate': 0.0,
-                'average_confidence': 0.0,
-                'landmark_visibility': {}
-            }
+        # 信頼度の統計
+        confidences = [p['detection_confidence'] for p in pose_results if p['has_pose']]
+        avg_confidence = np.mean(confidences) if confidences else 0
+        max_confidence = np.max(confidences) if confidences else 0
+        min_confidence = np.min(confidences) if confidences else 0
         
-        # 平均信頼度計算
-        total_confidence = sum(result['detection_confidence'] for result in pose_results if result['has_pose'])
-        average_confidence = total_confidence / detected_frames
-        
-        # ランドマーク可視性統計
-        landmark_visibility = {}
+        # ランドマーク検出率
+        landmark_detection_rates = {}
         for landmark_name in self.key_landmarks.keys():
-            visible_count = 0
-            total_visibility = 0.0
-            
-            for result in pose_results:
-                if result['has_pose'] and landmark_name in result['landmarks']:
-                    visibility = result['landmarks'][landmark_name]['visibility']
-                    if visibility > 0.5:
-                        visible_count += 1
-                    total_visibility += visibility
-            
-            if detected_frames > 0:
-                landmark_visibility[landmark_name] = {
-                    'visible_rate': visible_count / detected_frames,
-                    'average_visibility': total_visibility / detected_frames
-                }
+            detected_count = sum(1 for p in pose_results 
+                               if p['has_pose'] and landmark_name in p['landmarks'])
+            landmark_detection_rates[landmark_name] = (detected_count / detected_frames) * 100 if detected_frames > 0 else 0
         
         return {
             'total_frames': total_frames,
             'detected_frames': detected_frames,
-            'detection_rate': detected_frames / total_frames,
-            'average_confidence': average_confidence,
-            'landmark_visibility': landmark_visibility
+            'detection_rate': detection_rate,
+            'confidence_stats': {
+                'average': avg_confidence,
+                'maximum': max_confidence,
+                'minimum': min_confidence
+            },
+            'landmark_detection_rates': landmark_detection_rates,
+            'duration': pose_results[-1]['timestamp'] if pose_results else 0
         }
+    
+    def __del__(self):
+        """デストラクタ - MediaPipeリソースのクリーンアップ"""
+        if hasattr(self, 'pose') and self.pose:
+            self.pose.close()
 
 
 def main():
     """テスト用のメイン関数"""
     detector = PoseDetector()
     
-    # テスト用の動画ファイルがある場合の処理例
-    test_video_path = "/path/to/test_video.mov"
+    # テスト動画パス（実際のファイルパスに変更してください）
+    test_video = "test_video.mp4"
+    output_dir = "output"
     
-    try:
-        # ポーズ検出実行
-        pose_results = detector.process_video(test_video_path, "output_with_pose.mp4")
+    if os.path.exists(test_video):
+        os.makedirs(output_dir, exist_ok=True)
         
-        # 結果保存
-        detector.save_pose_data(pose_results, "pose_data.json")
+        # ポーズ検出実行
+        pose_results = detector.detect_poses(test_video, output_dir)
         
         # 統計情報表示
         stats = detector.get_pose_statistics(pose_results)
-        print("ポーズ検出統計:")
-        print(f"総フレーム数: {stats['total_frames']}")
-        print(f"検出フレーム数: {stats['detected_frames']}")
-        print(f"検出率: {stats['detection_rate']:.2%}")
-        print(f"平均信頼度: {stats['average_confidence']:.3f}")
-        
-    except Exception as e:
-        print(f"エラーが発生しました: {e}")
+        print("統計情報:", json.dumps(stats, indent=2, ensure_ascii=False))
+    else:
+        print(f"テスト動画が見つかりません: {test_video}")
 
 
 if __name__ == "__main__":
