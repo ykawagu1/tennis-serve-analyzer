@@ -29,6 +29,7 @@ import './App.css';
 const API_BASE_URL = 'http://192.168.10.105:5000';
 
 function App() {
+  const [showGuide, setShowGuide] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
@@ -352,6 +353,16 @@ function App() {
           </button>
         </div>
       </header>
+
+　　　   {/* 👇 ここにガイドボタン */}
+      <div style={{display: "flex", justifyContent: "center"}}>
+        <button onClick={() => setShowGuide(true)} className="guide-btn">
+          📸 撮影ガイドを見る
+        </button>
+      </div>
+
+
+
 
       {/* メインコンテンツ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -789,6 +800,29 @@ function App() {
           </div>
         )}
       </main>
+
+　　　{showGuide && (
+ 　　　 <div className="modal-overlay" onClick={() => setShowGuide(false)}>
+　　　    <div className="modal-content" onClick={e => e.stopPropagation()}>
+ 　　　     <img src="/camera_guide.png" alt="撮影ガイド" style={{width: '90%', maxWidth: 400, marginBottom: 20}} />
+ 　　　     <button
+ 　　　       onClick={() => setShowGuide(false)}
+  　　　      style={{
+  　　　        marginTop: 8,
+  　　　        padding: '8px 24px',
+   　　　       borderRadius: 6,
+   　　　       background: '#2D8CFF',
+  　　　        color: '#fff',
+  　　　        border: 'none',
+  　　　        fontWeight: 600
+  　　　      }}
+  　　　    >
+   　　　     閉じる
+   　　　   </button>
+ 　　　   </div>
+　　　  </div>
+　　　)}
+
     </div>
   );
 }
