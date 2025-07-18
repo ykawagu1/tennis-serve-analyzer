@@ -28,6 +28,7 @@ import './App.css';
 
 const API_BASE_URL = 'http://192.168.10.105:5000';
 
+
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -283,8 +284,6 @@ function App() {
       console.log('response.data:', response.data);
       console.log('response.data.success:', response.data?.success);
       console.log('response.data.result:', response.data?.result);
-      console.log('overlay_images:', response.data.result.overlay_images);
-
       
       // 重要: スコアデータの詳細確認
       if (response.data?.result) {
@@ -670,22 +669,7 @@ function App() {
                 </div>
               </div>
             </div>
-            
-            {/* オーバーレイ画像（縦並び）表示エリア */}
-            {analysisResult.overlay_images && analysisResult.overlay_images.length > 0 && (
-              <div className="overlay-images-vertical">
-               {analysisResult.overlay_images.map((img, i) => (
-                 <img
-                    key={i}
-                    src={`http://192.168.10.105:5000${img}`}
-                    alt={`オーバーレイ画像${i + 1}`}
-                    style={{ width: "220px", margin: "0 auto 16px", borderRadius: "8px", boxShadow: "0 2px 8px #0001" }}
-                  />
-                ))}
-              </div>
-             )}
 
-            
             {/* 新しい動画を解析ボタン */}
             <div className="text-center">
               <button
@@ -733,7 +717,7 @@ function App() {
                   <h2 className="unified-title">AI詳細解析レポート</h2>
                   {analysisResult.advice.enhanced && (
                     <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium ml-auto">
-                      ChatGPT生成
+                      GPT-4o生成
                     </span>
                   )}
                 </div>

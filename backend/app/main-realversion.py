@@ -7,17 +7,11 @@ import os
 import sys
 import logging
 import traceback
-
-from utils import generate_overlay_images_with_dominant_hand
 from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import uuid
-
-session_id = str(uuid.uuid4())
-output_dir = os.path.join('static', 'output', session_id)
-os.makedirs(output_dir, exist_ok=True)
 
 # パスの設定（相対インポートの問題を解決）
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -88,7 +82,6 @@ def analyze_video():
         
         logger.info(f"ファイル保存完了: {video_path}")
         
-        OUTPUT_FOLDER = 'static/output'
         # 出力ディレクトリの作成
         output_dir = os.path.join(OUTPUT_FOLDER, str(uuid.uuid4()))
         os.makedirs(output_dir, exist_ok=True)
@@ -201,23 +194,6 @@ def perform_analysis(video_path: str, output_dir: str, user_level: str, focus_ar
         logger.info("アドバイス生成完了")
         
         logger.info("=== perform_analysis 完了 ===")
-
-        # ===============================
-        # ★ここで画像生成関数を呼ぶ！★
-        # ===============================
-        overlay_images = generate_overlay_images_with_dominant_hand(
-            processed_video_path, pose_results, output_dir, pose_detector
-        )
-        # 画像のURL形式に変換
-        # output_dirは「static/output/xxxx」のように指定されていることが前提！
-        analysis_result['overlay_images'] = [
-            '/' + os.path.relpath(img_path, start=os.path.dirname(__file__)).replace('\\', '/')
-            for img_path in overlay_images
-        ]
-        # ===============================
-        # ★ここまで追加！★
-        # ===============================
-
         return analysis_result
         
     except Exception as e:

@@ -227,7 +227,7 @@ class AdviceGenerator:
                 # OpenAI v1.0+ 対応
                 logger.info("OpenAI v1.0+ APIを使用")
                 response = self.client.chat.completions.create(
-                    model="gpt-4o",  # GPT-4oを使用
+                    model="gpt-4.1-nano",  # GPT-4oを使用
                     messages=[
                         {
                             "role": "system",
@@ -236,7 +236,7 @@ class AdviceGenerator:
 テニスサービスの動作解析結果に基づいて、世界基準の詳細なアドバイスを提供してください。
 
 以下の構成で、合計2000文字程度の詳細なアドバイスを生成してください：
-
+ただし（約500文字）のようなキャプション画面表示しないでください
 ## フォーム改善点の詳細分析
 （約500文字）
 - 現在のフォームの具体的な問題点
@@ -283,7 +283,7 @@ class AdviceGenerator:
                 logger.info("OpenAI v0.x APIを使用")
                 import openai
                 response = openai.ChatCompletion.create(
-                    model="gpt-4o",
+                    model="gpt-4.1-nano",
                     messages=[
                         {
                             "role": "system",

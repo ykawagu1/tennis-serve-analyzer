@@ -1033,3 +1033,22 @@
   }
 }
 
+.overlay-images-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0 16px;
+  padding: 12px 0;
+  background: #fafafa;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px #0001;
+  max-width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.overlay-images-vertical img {
+  width: 220px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0002;
+}
