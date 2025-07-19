@@ -7,6 +7,7 @@ import os
 import sys
 import logging
 import traceback
+import subprocess
 
 from utils import generate_overlay_images_with_dominant_hand
 from datetime import datetime
@@ -41,6 +42,19 @@ CORS(app)
 def index():
     return "Hello, Tennis Serve Analyzer!"
 # Debug
+
+def ffmpeg_auto_rotate(input_path, output_path):
+    # 必要に応じて transpose=1,2,3 を切り替え（まずは1でOK）
+    cmd = [
+        'ffmpeg',
+        '-y',
+        '-i', input_path,
+        '-vf', 'transpose=1',
+        '-metadata:s:v', 'rotate=0',
+        output_path
+    ]
+    subprocess.run(cmd, check=True)
+
 
 # 設定
 UPLOAD_FOLDER = 'uploads'
@@ -94,6 +108,13 @@ def analyze_video():
         
         logger.info(f"ファイル保存完了: {video_path}")
         
+　　　　# ==============================
+　　　　# ★ここでffmpeg自動回転補正！！★
+　　　　rotated_video_path = os.path.join(UPLOAD_FOLDER, "rotated_" + unique_filename)
+　　　　ffmpeg_auto_rotate(video_path, rotated_video_path)
+　　　　video_path = rotated_video_path  # 以降は必ずコレを使う！
+　　　　# ==============================
+
         OUTPUT_FOLDER = 'static/output'
         # 出力ディレクトリの作成
         output_dir = os.path.join(OUTPUT_FOLDER, str(uuid.uuid4()))

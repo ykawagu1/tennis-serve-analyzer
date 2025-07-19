@@ -4,3 +4,4 @@ gunicorn
 flask
 flask-cors
 mediapipe
+Pillow
