@@ -285,3 +285,6 @@ if __name__ == '__main__':
     logger.info("テニスサーブ解析システム起動中...")
     app.run(host='0.0.0.0', port=5000, debug=True)
 
+@app.route("/cors-check")
+def cors_check():
+    return jsonify({"message": "CORS IS WORKING!"})
