@@ -37,17 +37,6 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)
 
-# Debug2
-@app.route('/api/check_ffmpeg')
-def check_ffmpeg():
-    try:
-        result = subprocess.run(['ffmpeg', '-version'], capture_output=True, text=True, check=True)
-        return "<pre>" + result.stdout + "</pre>"
-    except Exception as e:
-        return f"ffmpeg NOT found or failed: {e}"
-# Debug2
-
-
 # Debug
 @app.route("/")
 def index():
