@@ -36,6 +36,12 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)
 
+# Debug
+@app.route("/")
+def index():
+    return "Hello, Tennis Serve Analyzer!"
+# Debug
+
 # 設定
 UPLOAD_FOLDER = 'uploads'
 PROCESSED_FOLDER = 'processed'
