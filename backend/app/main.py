@@ -108,12 +108,12 @@ def analyze_video():
         
         logger.info(f"ファイル保存完了: {video_path}")
         
-　　　　# ==============================
-　　　　# ★ここでffmpeg自動回転補正！！★
-　　　　rotated_video_path = os.path.join(UPLOAD_FOLDER, "rotated_" + unique_filename)
-　　　　ffmpeg_auto_rotate(video_path, rotated_video_path)
-　　　　video_path = rotated_video_path  # 以降は必ずコレを使う！
-　　　　# ==============================
+        # ==============================
+        # ★ここでffmpeg自動回転補正！！★
+        rotated_video_path = os.path.join(UPLOAD_FOLDER, "rotated_" + unique_filename)
+        ffmpeg_auto_rotate(video_path, rotated_video_path)
+        video_path = rotated_video_path  # 以降は必ずコレを使う！
+        # ==============================
 
         OUTPUT_FOLDER = 'static/output'
         # 出力ディレクトリの作成
