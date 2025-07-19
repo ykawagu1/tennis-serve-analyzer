@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import './App.css';
 
-const API_BASE_URL = 'http://192.168.10.105:5000';
+const API_BASE_URL = 'https://tennis-serve-analyzer.onrender.com';
 
 function App() {
   const [showGuide, setShowGuide] = useState(false);
@@ -354,7 +354,7 @@ function App() {
         </div>
       </header>
 
-　　　   {/* 👇 ここにガイドボタン */}
+      {/* 👇 ここにガイドボタン */}
       <div style={{display: "flex", justifyContent: "center"}}>
         <button onClick={() => setShowGuide(true)} className="guide-btn">
           📸 撮影ガイドを見る
@@ -688,7 +688,7 @@ function App() {
                {analysisResult.overlay_images.map((img, i) => (
                  <img
                     key={i}
-                    src={`http://192.168.10.105:5000${img}`}
+                    src={`https://tennis-serve-analyzer.onrender.com${img}`}
                     alt={`オーバーレイ画像${i + 1}`}
                     style={{ width: "220px", margin: "0 auto 16px", borderRadius: "8px", boxShadow: "0 2px 8px #0001" }}
                   />
@@ -801,27 +801,27 @@ function App() {
         )}
       </main>
 
-　　　{showGuide && (
- 　　　 <div className="modal-overlay" onClick={() => setShowGuide(false)}>
-　　　    <div className="modal-content" onClick={e => e.stopPropagation()}>
- 　　　     <img src="/camera_guide.png" alt="撮影ガイド" style={{width: '90%', maxWidth: 400, marginBottom: 20}} />
- 　　　     <button
- 　　　       onClick={() => setShowGuide(false)}
-  　　　      style={{
-  　　　        marginTop: 8,
-  　　　        padding: '8px 24px',
-   　　　       borderRadius: 6,
-   　　　       background: '#2D8CFF',
-  　　　        color: '#fff',
-  　　　        border: 'none',
-  　　　        fontWeight: 600
-  　　　      }}
-  　　　    >
-   　　　     閉じる
-   　　　   </button>
- 　　　   </div>
-　　　  </div>
-　　　)}
+      {showGuide && (
+        <div className="modal-overlay" onClick={() => setShowGuide(false)}> 
+         <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <img src="/camera_guide.png" alt="撮影ガイド" style={{width: '90%', maxWidth: 400, marginBottom: 20}} />
+           <button
+             onClick={() => setShowGuide(false)}
+             style={{
+             marginTop: 8,
+             padding: '8px 24px',
+             borderRadius: 6,
+             background: '#2D8CFF',
+             color: '#fff',
+             border: 'none',
+             fontWeight: 600
+          }}
+         >
+           閉じる
+         </button>
+       </div>
+      </div>
+   )}
 
     </div>
   );
