@@ -104,7 +104,6 @@ def get_video_metadata(self, file_path: str) -> Optional[Dict]:
                 file_path
             ]
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True)
-            print(output)
             for line in output.splitlines():
                 line = line.strip().lower()
                 if line.startswith("rotation="):
