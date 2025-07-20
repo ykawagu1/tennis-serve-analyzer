@@ -1,8 +1,3 @@
-"""
-テニスサービス動作解析 - 動画処理サービス 完全修正版
-動画ファイルの検証、軽量化（fps/解像度ダウン）、必要な場合だけffmpegで回転補正
-"""
-
 import cv2
 import numpy as np
 import os
@@ -10,20 +5,15 @@ import tempfile
 import shutil
 from typing import Dict, List, Tuple, Optional, Union
 from pathlib import Path
-import json
 import time
 import subprocess
 
 class VideoProcessor:
-    """動画処理クラス"""
-
     def __init__(self, max_file_size: int = 100 * 1024 * 1024):
         self.supported_formats = ['.mov', '.mp4', '.avi', '.mkv', '.wmv']
         self.max_file_size = max_file_size
         self.temp_dir = tempfile.mkdtemp(prefix='tennis_analyzer_')
-
-        # 軽量化設定
-        self.max_duration = 30  # 最大30秒
+        self.max_duration = 30
         self.target_fps = 20
         self.target_resolution = (960, 540)
 
@@ -31,7 +21,6 @@ class VideoProcessor:
         self.cleanup()
 
     def cleanup(self):
-        """一時ファイルのクリーンアップ"""
         if hasattr(self, 'temp_dir') and os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir, ignore_errors=True)
 
@@ -43,7 +32,6 @@ class VideoProcessor:
             'metadata': {}
         }
         try:
-            # ファイル存在・サイズ・拡張子
             if not os.path.exists(file_path):
                 validation_result['error_message'] = 'ファイルが存在しません'
                 return validation_result
@@ -55,14 +43,11 @@ class VideoProcessor:
             if file_extension not in self.supported_formats:
                 validation_result['error_message'] = f'サポートされていないファイル形式です（対応形式: {", ".join(self.supported_formats)}）'
                 return validation_result
-            # メタデータ取得
             metadata = self.get_video_metadata(file_path)
             if not metadata:
                 validation_result['error_message'] = '動画ファイルを読み込めません'
                 return validation_result
             validation_result['metadata'] = metadata
-
-            # 警告判定
             if metadata['duration'] > self.max_duration:
                 validation_result['warnings'].append(f'動画が長すぎます（推奨: {self.max_duration}秒以下）')
             if metadata['width'] < 640 or metadata['height'] < 480:
@@ -71,65 +56,58 @@ class VideoProcessor:
                 validation_result['warnings'].append('フレームレートが低すぎる可能性があります（推奨: 15fps以上）')
             if metadata['frame_count'] < 30:
                 validation_result['warnings'].append('動画が短すぎる可能性があります（推奨: 1秒以上）')
-
             validation_result['is_valid'] = True
             return validation_result
-
         except Exception as e:
             validation_result['error_message'] = f'検証中にエラーが発生しました: {str(e)}'
             return validation_result
-   
-def get_video_metadata(self, file_path: str) -> Optional[Dict]:
-    import subprocess
-    import os
-    from pathlib import Path
-    import cv2
 
-    try:
-        cap = cv2.VideoCapture(file_path)
-        if not cap.isOpened():
-            return None
-        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        duration = frame_count / fps if fps > 0 else 0
-        cap.release()
-
-        # ffprobeで全ストリームをチェックし「rotation=」を探す
-        rotate = 0
+    def get_video_metadata(self, file_path: str) -> Optional[Dict]:
         try:
-            cmd = [
-                'ffprobe', '-v', 'error', '-show_streams',
-                file_path
-            ]
-            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True)
-            for line in output.splitlines():
-                line = line.strip().lower()
-                if line.startswith("rotation="):
-                    val = line.replace("rotation=", "").strip()
-                    try:
-                        rotate = int(val)
-                        break  # 最初に見つかったrotationだけ採用
-                    except Exception:
-                        continue
-        except Exception as e:
-            print("ffprobe rotation解析失敗:", e)
-            rotate = 0
+            cap = cv2.VideoCapture(file_path)
+            if not cap.isOpened():
+                return None
+            width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            fps = cap.get(cv2.CAP_PROP_FPS)
+            frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            duration = frame_count / fps if fps > 0 else 0
+            cap.release()
 
-        return {
-            'width': width,
-            'height': height,
-            'fps': fps,
-            'frame_count': frame_count,
-            'duration': duration,
-            'file_size': os.path.getsize(file_path),
-            'format': Path(file_path).suffix.lower(),
-            'rotate': rotate
-        }
-    except Exception as e:
-        print(f"メタデータ取得エラー: {e}")
-        return None
+            # ffprobeでrotation取得
+            rotate = 0
+            try:
+                cmd = [
+                    'ffprobe', '-v', 'error', '-show_streams',
+                    file_path
+                ]
+                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True)
+                for line in output.splitlines():
+                    line = line.strip().lower()
+                    if line.startswith("rotation="):
+                        val = line.replace("rotation=", "").strip()
+                        try:
+                            rotate = int(val)
+                            break
+                        except Exception:
+                            continue
+            except Exception as e:
+                print("ffprobe rotation解析失敗:", e)
+                rotate = 0
+
+            return {
+                'width': width,
+                'height': height,
+                'fps': fps,
+                'frame_count': frame_count,
+                'duration': duration,
+                'file_size': os.path.getsize(file_path),
+                'format': Path(file_path).suffix.lower(),
+                'rotate': rotate
+            }
+        except Exception as e:
+            print(f"メタデータ取得エラー: {e}")
+            return None
 
     def extract_frames(self, video_path: str, max_frames: int = 200) -> List[np.ndarray]:
         frames = []
@@ -156,10 +134,6 @@ def get_video_metadata(self, file_path: str) -> Optional[Dict]:
         return frames
 
     def preprocess_video(self, video_path: str, output_path: Optional[str] = None) -> str:
-        """
-        動画の軽量化（解像度/フレームレートダウン）
-        回転が必要な場合はこの後ffmpegで回転補正すること（別メソッド）
-        """
         if output_path is None:
             output_path = os.path.join(self.temp_dir, f"preprocessed_{int(time.time())}.mp4")
         cap = cv2.VideoCapture(video_path)
@@ -192,29 +166,15 @@ def get_video_metadata(self, file_path: str) -> Optional[Dict]:
         return output_path
 
     def rotate_video_if_needed(self, input_path: str, output_path: str, rotate: int) -> str:
-        """
-        回転が必要な場合のみffmpegで回転補正
-        rotate: ±90, ±180, ±270対応
-        -90 なら transpose=3（反時計回り）
-        +90 なら transpose=1（時計回り）
-        """
         print(f"入力rotate値: {rotate}")
         if rotate == 0:
             print("回転不要")
-            return input_path  # 回転不要
+            return input_path
 
-        # デフォルトは絶対値でマップ
-        abs_rotate = abs(rotate)
-        transpose_map = {
-            90: 1,    # +90: 時計回り
-            180: 2,   # 180は仮で2
-            270: 3    # +270: 反時計回り
-       }
-        # -90は反時計回り: transpose=3
         if rotate == -90:
-            transpose_val = 3
+            transpose_val = 3  # 反時計回り
         elif rotate == 90:
-            transpose_val = 1
+            transpose_val = 1  # 時計回り
         elif rotate == 180 or rotate == -180:
             transpose_val = 2
         elif rotate == -270:
@@ -240,7 +200,6 @@ def get_video_metadata(self, file_path: str) -> Optional[Dict]:
 
         return output_path
 
-
     def _calculate_output_resolution(self, width: int, height: int) -> Tuple[int, int]:
         target_width, target_height = self.target_resolution
         aspect_ratio = width / height
@@ -254,8 +213,3 @@ def get_video_metadata(self, file_path: str) -> Optional[Dict]:
         output_width = output_width - (output_width % 2)
         output_height = output_height - (output_height % 2)
         return output_width, output_height
-
-# --- 使い方例 ---
-# 1. validate_video でチェック
-# 2. preprocess_video で軽量化
-# 3. get_video_metadata で rotate確認、必要なら rotate_video_if_needed
