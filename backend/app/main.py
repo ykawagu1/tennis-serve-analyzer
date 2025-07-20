@@ -290,3 +290,16 @@ if __name__ == '__main__':
 @app.route("/cors-check")
 def cors_check():
     return jsonify({"message": "CORS IS WORKING!"})
+
+
+# Debag (DL用)
+from flask import send_file
+
+@app.route("/api/download-rotated", methods=["GET"])
+def download_rotated():
+    rotated_path = "パス/to/rotated.mp4"  # 本当に保存された場所に書き換え！
+    if os.path.exists(rotated_path):
+        return send_file(rotated_path, as_attachment=True)
+    else:
+        return "ファイルが見つかりません", 404
+# Debag
