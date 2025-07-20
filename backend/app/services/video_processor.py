@@ -78,10 +78,15 @@ class VideoProcessor:
         except Exception as e:
             validation_result['error_message'] = f'検証中にエラーが発生しました: {str(e)}'
             return validation_result
-
+   
     def get_video_metadata(self, file_path: str) -> Optional[Dict]:
+        import subprocess
+        import json
+        import os
+        from pathlib import Path
+        import cv2
+
         try:
-            import subprocess
             cap = cv2.VideoCapture(file_path)
             if not cap.isOpened():
                 return None
@@ -94,44 +99,57 @@ class VideoProcessor:
 
             rotate = 0
 
-            # 1. stream_tags=rotate or rotation
-            for tag in ['rotate', 'rotation']:
-                try:
-                    cmd = [
-                        'ffprobe', '-v', 'error', '-select_streams', 'v:0',
-                        '-show_entries', f'stream_tags={tag}',
-                        '-of', 'default=noprint_wrappers=1:nokey=1',
-                        file_path
-                    ]
-                    output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True).strip()
-                    if output:
-                        try:
-                            rotate = int(output)
-                            break
-                        except Exception:
-                            continue
-                except Exception:
-                    continue
+            # --- 1. ffprobe JSON 形式でside_data_list, tags両方から回転取得 ---
+            try:
+                cmd = [
+                    'ffprobe', '-v', 'error',
+                    '-select_streams', 'v:0',
+                    '-show_entries', 'stream=side_data_list:stream_tags=rotate:stream_tags=rotation',
+                    '-of', 'json',
+                    file_path
+                ]
+                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True)
+                info = json.loads(output)
+                streams = info.get("streams", [])
+                if streams:
+                    stream = streams[0]
+                    # side_data_listからrotation
+                    if "side_data_list" in stream:
+                        for side in stream["side_data_list"]:
+                            if "rotation" in side:
+                                try:
+                                    rotate = int(side["rotation"])
+                                    break
+                                except Exception:
+                                    continue
+                    # tags:rotate or tags:rotation
+                    if rotate == 0 and "tags" in stream:
+                        for tag_name in ["rotate", "rotation"]:
+                            if tag_name in stream["tags"]:
+                                try:
+                                    rotate = int(stream["tags"][tag_name])
+                                    break
+                                except Exception:
+                                    continue
+            except Exception as e:
+                print(f"ffprobe JSON取得エラー: {e}")
 
-            # 2. -show_streams でSIDE_DATAを直接走査
+            # --- 2. fallback: 平文出力からrotation=...行を読む ---
             if rotate == 0:
                 try:
                     cmd = [
-                        'ffprobe', '-v', 'error', '-show_streams',
-                        file_path
+                        'ffprobe', '-v', 'error', '-show_streams', file_path
                     ]
                     output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True)
-                    print(output)  # ← ここでffprobeの全文が出る！
                     for line in output.splitlines():
-                        line = line.strip()
-                        if line.startswith('rotation='):
+                        if line.strip().startswith("rotation="):
                             try:
-                                rotate = int(line.replace('rotation=', '').strip())
+                                rotate = int(line.strip().replace("rotation=", ""))
                                 break
                             except Exception:
                                 continue
-                except Exception:
-                    pass
+                except Exception as e:
+                    print(f"ffprobe 平文取得エラー: {e}")
 
             return {
                 'width': width,
@@ -143,6 +161,7 @@ class VideoProcessor:
                 'format': Path(file_path).suffix.lower(),
                 'rotate': rotate
             }
+
         except Exception as e:
             print(f"メタデータ取得エラー: {e}")
             return None
