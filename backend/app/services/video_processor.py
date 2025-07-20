@@ -81,6 +81,7 @@ class VideoProcessor:
 
     def get_video_metadata(self, file_path: str) -> Optional[Dict]:
         try:
+            import subprocess
             cap = cv2.VideoCapture(file_path)
             if not cap.isOpened():
                 return None
@@ -91,20 +92,23 @@ class VideoProcessor:
             duration = frame_count / fps if fps > 0 else 0
             cap.release()
 
-            # ffprobeで回転情報取得（もし必要なら）
+        # ffprobeで回転情報取得（rotate/rotation両方）
             rotate = 0
-            try:
-                cmd = [
-                    'ffprobe', '-v', 'error', '-select_streams', 'v:0',
-                    '-show_entries', 'stream_tags=rotate',
-                    '-of', 'default=noprint_wrappers=1:nokey=1',
-                    file_path
-                ]
-                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True).strip()
-                if output:
-                    rotate = int(output)
-            except Exception:
-                rotate = 0
+            for tag in ['rotate', 'rotation']:
+                try:
+                    cmd = [
+                        'ffprobe', '-v', 'error', '-select_streams', 'v:0',
+                        f'-show_entries', f'stream_tags={tag}',
+                        '-of', 'default=noprint_wrappers=1:nokey=1',
+                        file_path
+                    ]
+                    output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True).strip()
+                    if output:
+                    # -90/90/180/-180などをintで返す
+                        rotate = int(output)
+                        break  # 最初に見つけたものでOK
+                except Exception:
+                    continue
 
             return {
                 'width': width,
@@ -115,10 +119,11 @@ class VideoProcessor:
                 'file_size': os.path.getsize(file_path),
                 'format': Path(file_path).suffix.lower(),
                 'rotate': rotate
-            }
+                }
         except Exception as e:
             print(f"メタデータ取得エラー: {e}")
             return None
+    
 
     def extract_frames(self, video_path: str, max_frames: int = 200) -> List[np.ndarray]:
         frames = []
