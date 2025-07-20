@@ -33,9 +33,9 @@ class VideoProcessor:
         #self.target_fps = 30
         #self.target_resolution = (1280, 720)  # HD解像度
         self.max_duration = 30  # 最大30秒
-        #以下が軽量化版
-        self.target_fps = 20
-        self.target_resolution = (960, 540)
+        #以下が最軽量化版（元々は20fps,(960,540)）
+        self.target_fps = 5
+        self.target_resolution = (480, 270)
 
     def __del__(self):
         """デストラクタ - 一時ディレクトリのクリーンアップ"""
