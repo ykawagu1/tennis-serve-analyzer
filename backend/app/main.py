@@ -139,44 +139,19 @@ def analyze_video():
             'error': str(e)
         }), 500
 
-
 def perform_analysis(video_path: str, output_dir: str, user_level: str, focus_areas: str, 
                     use_chatgpt: bool, api_key: str, user_concerns: str) -> dict:
-    """解析処理の実行"""
     try:
         logger.info("=== perform_analysis 開始 ===")
-        
-        # Step 1: 動画前処理（修正版）
-        logger.info("Step 1: 動画前処理を開始")
+
+        # ★★ ここは前処理しない！！ video_path（=回転補正済み）をそのまま使う ★★
+        processed_video_path = video_path
+        logger.info(f"動画パス（回転補正済み）: {processed_video_path}")
+
+        # メタデータ取得（回転補正済み動画）
         video_processor = VideoProcessor()
-        
-        # video_processorの実際のメソッドを確認して適切に呼び出し
-        try:
-            # まず検証を実行
-            validation_result = video_processor.validate_video(video_path)
-            if not validation_result['is_valid']:
-                raise ValueError(f"動画検証エラー: {validation_result['error_message']}")
-            
-            # 前処理を実行（preprocess_videoメソッドを使用）
-            processed_video_path = video_processor.preprocess_video(video_path)
-            
-            # メタデータを取得
-            video_metadata = video_processor.get_video_metadata(processed_video_path)
-            if not video_metadata:
-                video_metadata = {
-                    'fps': 30,
-                    'width': 1280,
-                    'height': 720,
-                    'duration': 5.0,
-                    'frame_count': 150
-                }
-            
-            logger.info(f"動画前処理完了: {processed_video_path}")
-            logger.info(f"動画メタデータ: {video_metadata}")
-            
-        except Exception as e:
-            logger.warning(f"動画前処理エラー、元ファイルを使用: {e}")
-            processed_video_path = video_path
+        video_metadata = video_processor.get_video_metadata(processed_video_path)
+        if not video_metadata:
             video_metadata = {
                 'fps': 30,
                 'width': 1280,
@@ -184,13 +159,15 @@ def perform_analysis(video_path: str, output_dir: str, user_level: str, focus_ar
                 'duration': 5.0,
                 'frame_count': 150
             }
+        logger.info(f"動画メタデータ: {video_metadata}")
+
         
-        # Step 2: ポーズ検出（output_dir引数を追加）
+         # Step 2: ポーズ検出
         logger.info("Step 2: ポーズ検出を開始")
         pose_detector = PoseDetector()
         pose_results = pose_detector.detect_poses(processed_video_path, output_dir)
         logger.info(f"ポーズ検出完了: {len(pose_results)} フレーム")
-        
+
         # ポーズ検出結果の詳細確認
         if pose_results:
             pose_frames = [i for i, frame in enumerate(pose_results) if frame.get('landmarks')]
