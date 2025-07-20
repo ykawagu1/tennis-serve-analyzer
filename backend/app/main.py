@@ -53,7 +53,7 @@ def ffmpeg_auto_rotate(input_path, output_path):
         'ffmpeg',
         '-y',
         '-i', input_path,
-        '-vf', 'transpose=3',
+        '-vf', 'transpose=2',
         '-metadata:s:v', 'rotate=0',
         output_path
     ]
