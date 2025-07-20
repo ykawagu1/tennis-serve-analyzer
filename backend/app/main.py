@@ -47,19 +47,6 @@ def index():
     return "Hello, Tennis Serve Analyzer!"
 # Debug
 
-def ffmpeg_auto_rotate(input_path, output_path):
-    # 必要に応じて transpose=1,2,3 を切り替え（まずは1でOK）
-    cmd = [
-        'ffmpeg',
-        '-y',
-        '-i', input_path,
-        '-vf', 'transpose=2',
-        '-metadata:s:v', 'rotate=0',
-        output_path
-    ]
-    subprocess.run(cmd, check=True)
-
-
 # 設定
 UPLOAD_FOLDER = 'uploads'
 PROCESSED_FOLDER = 'processed'
@@ -76,65 +63,74 @@ def allowed_file(filename):
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze_video():
-    """動画解析のメインエンドポイント"""
     try:
         logger.info("=== 動画解析リクエスト受信 ===")
-        
-        # ファイルの確認
+
+        # ファイルチェック
         if 'video' not in request.files:
             return jsonify({'success': False, 'error': 'ビデオファイルが見つかりません'}), 400
-        
+
         file = request.files['video']
         if file.filename == '':
             return jsonify({'success': False, 'error': 'ファイルが選択されていません'}), 400
-        
+
         if not allowed_file(file.filename):
             return jsonify({'success': False, 'error': '対応していないファイル形式です'}), 400
-        
-        # パラメータの取得
+
+        # パラメータ取得
         use_chatgpt = request.form.get('use_chatgpt', 'false').lower() == 'true'
         api_key = request.form.get('api_key', '')
         user_concerns = request.form.get('user_concerns', '')
         user_level = request.form.get('user_level', 'intermediate')
         focus_areas = request.form.get('focus_areas', '[]')
-        
+
         logger.info(f"解析パラメータ:")
         logger.info(f"- use_chatgpt: {use_chatgpt}")
         logger.info(f"- user_level: {user_level}")
         logger.info(f"- user_concerns: {user_concerns}")
         logger.info(f"- focus_areas: {focus_areas}")
-        
+
         # ファイル保存
         filename = secure_filename(file.filename)
         unique_filename = f"{uuid.uuid4()}_{filename}"
         video_path = os.path.join(UPLOAD_FOLDER, unique_filename)
         file.save(video_path)
-        
         logger.info(f"ファイル保存完了: {video_path}")
-        
-        # ==============================
-        # ★ここでffmpeg自動回転補正！！★
-        rotated_video_path = os.path.join(UPLOAD_FOLDER, "rotated_" + unique_filename)
-        ffmpeg_auto_rotate(video_path, rotated_video_path)
-        video_path = rotated_video_path  # 以降は必ずコレを使う！
-        # ==============================
+
+        # ======= ここから VideoProcessor 利用 =======
+        video_processor = VideoProcessor()
+        # 検証して回転情報取得
+        validation_result = video_processor.validate_video(video_path)
+        rotate = validation_result["metadata"].get("rotate", 0)
+
+        # 軽量化処理
+        preprocessed_path = video_processor.preprocess_video(video_path)
+
+        # 回転が必要な場合のみffmpegで回転
+        if rotate in [90, 180, 270]:
+            rotated_path = os.path.join(video_processor.temp_dir, "rotated.mp4")
+            final_path = video_processor.rotate_video_if_needed(preprocessed_path, rotated_path, rotate)
+            logger.info(f"動画回転補正済み: {final_path}")
+        else:
+            final_path = preprocessed_path
+
+        # ======= ここまでで動画前処理が完成 =======
 
         OUTPUT_FOLDER = 'static/output'
-        # 出力ディレクトリの作成
         output_dir = os.path.join(OUTPUT_FOLDER, str(uuid.uuid4()))
         os.makedirs(output_dir, exist_ok=True)
-        
+
         # 解析実行
         analysis_result = perform_analysis(
-            video_path, output_dir, user_level, focus_areas, use_chatgpt, api_key, user_concerns
+            final_path, output_dir, user_level, focus_areas, use_chatgpt, api_key, user_concerns
         )
-        
+
         logger.info("=== 動画解析完了 ===")
         return jsonify({
             'success': True,
             'result': analysis_result
         })
-        
+
     except Exception as e:
         logger.error(f"解析エラー: {e}")
         logger.error(traceback.format_exc())
@@ -142,6 +138,7 @@ def analyze_video():
             'success': False,
             'error': str(e)
         }), 500
+
 
 def perform_analysis(video_path: str, output_dir: str, user_level: str, focus_areas: str, 
                     use_chatgpt: bool, api_key: str, user_concerns: str) -> dict:
