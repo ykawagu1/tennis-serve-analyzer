@@ -241,6 +241,9 @@ def perform_analysis(video_path: str, output_dir: str, user_level: str, focus_ar
             '/' + os.path.relpath(img_path, start=os.path.dirname(__file__)).replace('\\', '/')
             for img_path in overlay_images
         ]
+        logger.info(f"生成オーバーレイ画像: {overlay_images}")
+        logger.info(f"os.listdir({output_dir}) = {os.listdir(output_dir)}")
+
         # ===============================
         # ★ここまで追加！★
         # ===============================
