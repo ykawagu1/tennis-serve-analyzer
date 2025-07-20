@@ -92,10 +92,9 @@ class VideoProcessor:
             duration = frame_count / fps if fps > 0 else 0
             cap.release()
 
-            # --- 回転情報の取得 ---
             rotate = 0
 
-            # 1. stream_tags=rotate or rotation を優先
+            # 1. stream_tags=rotate or rotation
             for tag in ['rotate', 'rotation']:
                 try:
                     cmd = [
@@ -114,17 +113,16 @@ class VideoProcessor:
                 except Exception:
                     continue
 
-            # 2. SIDE_DATAのrotation=XX対応（たとえば rotation=-90 など）
+            # 2. -show_streams でSIDE_DATAを直接走査
             if rotate == 0:
                 try:
                     cmd = [
-                        'ffprobe', '-v', 'error', '-select_streams', 'v:0',
-                        '-show_entries', 'stream_side_data_list',
-                        '-of', 'default=noprint_wrappers=1:nokey=1',
+                        'ffprobe', '-v', 'error', '-show_streams',
                         file_path
                     ]
-                    output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True).strip()
+                    output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True)
                     for line in output.splitlines():
+                        line = line.strip()
                         if line.startswith('rotation='):
                             try:
                                 rotate = int(line.replace('rotation=', '').strip())
@@ -147,6 +145,7 @@ class VideoProcessor:
         except Exception as e:
             print(f"メタデータ取得エラー: {e}")
             return None
+
 
 
     
