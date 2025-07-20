@@ -357,7 +357,7 @@ function App() {
       {/* 👇 ここにガイドボタン */}
       <div style={{display: "flex", justifyContent: "center"}}>
         <button onClick={() => setShowGuide(true)} className="guide-btn">
-          📸 撮影ガイドを見る
+          📸 撮影ガイドを見る（横向き撮影必須！）
         </button>
       </div>
 
