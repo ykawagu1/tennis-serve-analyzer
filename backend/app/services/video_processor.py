@@ -32,7 +32,7 @@ class VideoProcessor:
         #最高精度
         #self.target_fps = 30
         #self.target_resolution = (1280, 720)  # HD解像度
-        #self.max_duration = 30  # 最大30秒
+        self.max_duration = 30  # 最大30秒
         #以下が軽量化版
         self.target_fps = 20
         self.target_resolution = (960, 540)
