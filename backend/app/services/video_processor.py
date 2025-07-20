@@ -121,6 +121,7 @@ class VideoProcessor:
                         file_path
                     ]
                     output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True)
+                    print(output)  # ← ここでffprobeの全文が出る！
                     for line in output.splitlines():
                         line = line.strip()
                         if line.startswith('rotation='):
