@@ -188,26 +188,52 @@ class VideoProcessor:
     def rotate_video_if_needed(self, input_path: str, output_path: str, rotate: int) -> str:
         """
         回転が必要な場合のみffmpegで回転補正
-        rotate: 90, 180, 270のみ対応
+        rotate: ±90, ±180, ±270対応
+        -90 なら transpose=3（反時計回り）
+        +90 なら transpose=1（時計回り）
         """
+        print(f"入力rotate値: {rotate}")
         if rotate == 0:
+            print("回転不要")
             return input_path  # 回転不要
-        # transpose値の決定
+
+        # デフォルトは絶対値でマップ
+        abs_rotate = abs(rotate)
         transpose_map = {
-            90: 1,
-            180: 2,  # 180度はvflip,hflipで実装した方が正確だがここでは2で
-            270: 3
-        }
-        if rotate not in transpose_map:
+            90: 1,    # +90: 時計回り
+            180: 2,   # 180は仮で2
+            270: 3    # +270: 反時計回り
+       }
+        # -90は反時計回り: transpose=3
+        if rotate == -90:
+            transpose_val = 3
+        elif rotate == 90:
+            transpose_val = 1
+        elif rotate == 180 or rotate == -180:
+            transpose_val = 2
+        elif rotate == -270:
+            transpose_val = 1
+        elif rotate == 270:
+            transpose_val = 3
+        else:
             raise ValueError(f"未対応の回転角度: {rotate}")
+
         cmd = [
             "ffmpeg", "-y", "-i", input_path,
-            "-vf", f"transpose={transpose_map[rotate]}",
+            "-vf", f"transpose={transpose_val}",
             "-metadata:s:v", "rotate=0",
             output_path
         ]
-        subprocess.run(cmd, check=True)
+        print("実行ffmpegコマンド:", " ".join(cmd))
+        try:
+            subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print("ffmpeg回転OK:", output_path)
+        except subprocess.CalledProcessError as e:
+            print("ffmpeg回転エラー:", e.stderr.decode())
+            raise
+
         return output_path
+
 
     def _calculate_output_resolution(self, width: int, height: int) -> Tuple[int, int]:
         target_width, target_height = self.target_resolution
