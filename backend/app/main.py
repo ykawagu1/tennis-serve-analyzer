@@ -34,7 +34,11 @@ from services.advice_generator import AdviceGenerator
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_folder=os.path.join(os.path.dirname(__file__), "static"),
+    static_url_path='/static'
+)
 CORS(app)
 
 # Debug
