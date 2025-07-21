@@ -1,5 +1,5 @@
 """
-テニスサーブ解析システム - メインアプリケーション（完全修正版・回転物理補正対応）
+テニスサーブ解析システム - メインアプリケーション（ffmpeg一発変換・完全物理回転対応版）
 """
 
 import os
@@ -22,7 +22,6 @@ from services.pose_detector import PoseDetector
 from services.motion_analyzer import MotionAnalyzer
 from services.advice_generator import AdviceGenerator
 
-# ログ設定
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -43,7 +42,7 @@ for folder in [UPLOAD_FOLDER, OUTPUT_FOLDER]:
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# ★★★ ffprobeで回転を完全検出(JSON解析) ★★★
+# ---------- ffprobe回転角度抽出（JSON解析） ----------
 def detect_rotation_ffprobe(file_path):
     try:
         cmd = [
@@ -70,40 +69,36 @@ def detect_rotation_ffprobe(file_path):
                         pass
         return rotate
     except Exception as e:
-        print(f"ffprobe回転取得エラー: {e}")
+        logger.warning(f"ffprobe回転取得エラー: {e}")
         return 0
 
-# ★★★ ffmpegで物理的に動画を回転 ★★★
-def physically_rotate_video(input_path, output_path, rotate):
-    """
-    ffmpegで物理的に回転補正
-    +90: transpose=1
-    -90: transpose=2
-    180: hflip,vflip
-    """
+# ---------- ffmpeg一発：回転＋リサイズ＋fps ----------
+def ffmpeg_one_shot(input_path, output_path, rotate, target_res=(960, 540), target_fps=20):
+    vf = []
+    # 回転指定
     if rotate == 90:
-        vf = "transpose=1"
+        vf.append("transpose=1")  # 時計回り90度
     elif rotate == -90 or rotate == 270:
-        vf = "transpose=2"
+        vf.append("transpose=2")  # 反時計回り90度
     elif rotate == 180 or rotate == -180:
-        vf = "hflip,vflip"
-    else:
-        return input_path  # 回転不要
-
+        vf.append("hflip,vflip")  # 180度
+    # リサイズ＆fps
+    vf.append(f"scale={target_res[0]}:{target_res[1]}")
+    vf.append(f"fps={target_fps}")
+    vf_filter = ",".join(vf)
     cmd = [
         "ffmpeg", "-y", "-i", input_path,
-        "-vf", vf,
+        "-vf", vf_filter,
         "-metadata:s:v", "rotate=0",
         output_path
     ]
     try:
         subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        logger.info(f"ffmpegで物理回転補正済: {output_path}")
+        logger.info(f"ffmpeg一発変換完了: {output_path}")
         return output_path
     except subprocess.CalledProcessError as e:
-        logger.error(f"ffmpeg回転失敗: {e.stderr.decode()}")
+        logger.error(f"ffmpeg一発変換失敗: {e.stderr.decode()}")
         return input_path
-
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze_video():
@@ -125,35 +120,30 @@ def analyze_video():
         file.save(video_path)
         logger.info(f"ファイル保存完了: {video_path}")
 
-        # (1) ffprobeで回転検出
+        # (1) 回転取得
         rotate = detect_rotation_ffprobe(video_path)
         logger.info(f"ffprobe回転角度: {rotate}")
 
-        # (2) 回転物理補正（必要時のみ）
-        processed_path = video_path
-        if rotate not in [0, None]:
-            rotated_path = os.path.join(UPLOAD_FOLDER, f"rotated_{unique_filename}")
-            processed_path = physically_rotate_video(video_path, rotated_path, rotate)
-        logger.info(f"物理回転補正済みパス: {processed_path}")
+        # (2) ffmpeg一発変換
+        processed_name = f"processed_{unique_filename}"
+        processed_path = os.path.join(UPLOAD_FOLDER, processed_name)
+        processed_path = ffmpeg_one_shot(video_path, processed_path, rotate)
 
-        # (3) 軽量化 (cv2で解像度/フレーム数ダウン)
-        video_processor = VideoProcessor()
-        preprocessed_path = video_processor.preprocess_video(processed_path)
-
-        # (4) 解析用出力ディレクトリ生成
+        # (3) 解析用出力ディレクトリ
         out_dir = os.path.join(OUTPUT_FOLDER, str(uuid.uuid4()))
         os.makedirs(out_dir, exist_ok=True)
 
-        # (5) メタデータ再取得 (※今度は正しい向き)
-        video_metadata = video_processor.get_video_metadata(preprocessed_path)
+        # (4) メタデータ取得
+        video_processor = VideoProcessor()
+        video_metadata = video_processor.get_video_metadata(processed_path)
         logger.info(f"動画メタデータ: {video_metadata}")
 
-        # (6) ポーズ検出
+        # (5) ポーズ検出
         pose_detector = PoseDetector()
-        pose_results = pose_detector.detect_poses(preprocessed_path, out_dir)
+        pose_results = pose_detector.detect_poses(processed_path, out_dir)
         logger.info(f"ポーズ検出フレーム数: {len(pose_results)}")
 
-        # (7) サーブフェーズ検出
+        # (6) サーブフェーズ検出
         from services.motion_analyzer import ServePhase
         total_frames = len(pose_results)
         phase_duration = total_frames // 6 if total_frames else 1
@@ -171,17 +161,17 @@ def analyze_video():
                 end_frame=end_frame, duration=duration, key_events=[]
             ))
 
-        # (8) 動作解析
+        # (7) 動作解析
         motion_analyzer = MotionAnalyzer()
         analysis_result = motion_analyzer.analyze_motion(
             pose_results, serve_phases, video_metadata
         )
 
-        # (9) 段階的評価
+        # (8) 段階的評価
         tiered_evaluation = motion_analyzer.calculate_tiered_overall_score(analysis_result)
         analysis_result['tiered_evaluation'] = tiered_evaluation
 
-        # (10) アドバイス生成
+        # (9) アドバイス生成
         advice_generator = AdviceGenerator()
         advice = advice_generator.generate_advice(
             analysis_result, use_chatgpt=False, api_key="",
@@ -189,9 +179,9 @@ def analyze_video():
         )
         analysis_result['advice'] = advice
 
-        # (11) オーバーレイ画像生成
+        # (10) オーバーレイ画像生成
         overlay_images = generate_overlay_images_with_dominant_hand(
-            preprocessed_path, pose_results, out_dir, pose_detector
+            processed_path, pose_results, out_dir, pose_detector
         )
         analysis_result['overlay_images'] = [
             '/' + os.path.relpath(img_path, start=os.path.dirname(__file__)).replace('\\', '/')
