@@ -172,12 +172,19 @@ def analyze_video():
         analysis_result['tiered_evaluation'] = tiered_evaluation
 
         # (9) アドバイス生成
-        advice_generator = AdviceGenerator()
+        # ここでAPIキーを受け取る
+        api_key = request.form.get("api_key", "")
+        print(f"★★受け取ったapi_key = {api_key}")
+
+        advice_generator = AdviceGenerator(api_key=api_key)
         advice = advice_generator.generate_advice(
-            analysis_result, use_chatgpt=False, api_key="",
-            user_concerns="", user_level="intermediate"
+            analysis_result,
+            user_concerns="",  # 必要に応じて
+            user_level="intermediate"
+            # use_chatgpt, api_keyは省略でOK
         )
         analysis_result['advice'] = advice
+
 
         # (10) オーバーレイ画像生成
         overlay_images = generate_overlay_images_with_dominant_hand(
