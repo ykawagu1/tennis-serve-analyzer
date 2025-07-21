@@ -6,3 +6,4 @@ flask-cors
 mediapipe
 Pillow
 opencv-python-headless
+openai
