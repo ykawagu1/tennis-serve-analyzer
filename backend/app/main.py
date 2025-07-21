@@ -90,7 +90,7 @@ def ffmpeg_one_shot(input_path, output_path, rotate, target_res=(960, 540), targ
         "ffmpeg", "-y", "-i", input_path,
         "-vf", vf_filter,
         "-preset", "ultrafast",
-        "-threads", "8", 
+        "-threads", "4", 
         "-metadata:s:v", "rotate=0",
         output_path
     ]
