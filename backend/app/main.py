@@ -75,20 +75,24 @@ def detect_rotation_ffprobe(file_path):
 
 # ★★★ ffmpegで物理的に動画を回転 ★★★
 def physically_rotate_video(input_path, output_path, rotate):
-    # ±90/±180/±270対応（±270はtransposeの都合で一部サポート外）
-    transpose_val = None
+    """
+    ffmpegで物理的に回転補正
+    +90: transpose=1
+    -90: transpose=2
+    180: hflip,vflip
+    """
     if rotate == 90:
-        transpose_val = 1  # 時計回り
+        vf = "transpose=1"
     elif rotate == -90 or rotate == 270:
-        transpose_val = 3  # 反時計回り
+        vf = "transpose=2"
     elif rotate == 180 or rotate == -180:
-        transpose_val = 2  # 上下反転（近似）
+        vf = "hflip,vflip"
     else:
-        # 回転不要 or 未対応
-        return input_path
+        return input_path  # 回転不要
+
     cmd = [
         "ffmpeg", "-y", "-i", input_path,
-        "-vf", f"transpose={transpose_val}",
+        "-vf", vf,
         "-metadata:s:v", "rotate=0",
         output_path
     ]
@@ -99,6 +103,7 @@ def physically_rotate_video(input_path, output_path, rotate):
     except subprocess.CalledProcessError as e:
         logger.error(f"ffmpeg回転失敗: {e.stderr.decode()}")
         return input_path
+
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze_video():
