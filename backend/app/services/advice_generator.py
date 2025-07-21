@@ -45,37 +45,37 @@ class AdviceGenerator:
         """
         解析データに基づいてアドバイスを生成
         """
-    # --- APIキー自動吸収：引数→インスタンス→環境変数 ---
-    key_to_use = api_key or self.api_key or os.environ.get("OPENAI_API_KEY")
-    if not self.client and key_to_use:
-        self._init_openai_client(key_to_use)
-    if use_chatgpt is None:
-        use_chatgpt = bool(key_to_use)
+        # --- APIキー自動吸収：引数→インスタンス→環境変数 ---
+        key_to_use = api_key or self.api_key or os.environ.get("OPENAI_API_KEY")
+        if not self.client and key_to_use:
+            self._init_openai_client(key_to_use)
+        if use_chatgpt is None:
+            use_chatgpt = bool(key_to_use)
 
-    logger.info(f"アドバイス生成開始 - ChatGPT使用: {use_chatgpt}, APIキー: {'あり' if key_to_use else 'なし'}, 気になること: {bool(user_concerns)}")
+        logger.info(f"アドバイス生成開始 - ChatGPT使用: {use_chatgpt}, APIキー: {'あり' if key_to_use else 'なし'}, 気になること: {bool(user_concerns)}")
 
-    basic_advice = self._generate_basic_advice(analysis_data)
+        basic_advice = self._generate_basic_advice(analysis_data)
 
-    if use_chatgpt and key_to_use:
-        try:
-            logger.info("ChatGPT詳細アドバイス生成開始")
-            enhanced_advice = self._generate_enhanced_advice(
-                analysis_data, basic_advice, user_concerns)
-            logger.info(f"ChatGPT詳細アドバイス生成完了 - Enhanced: {enhanced_advice.get('enhanced', False)}")
-            return enhanced_advice
-        except Exception as e:
-            logger.error(f"ChatGPT API呼び出しエラー: {e}")
-            basic_advice["enhanced"] = False
-            basic_advice["error"] = f"ChatGPT接続エラー: {str(e)}"
+        if use_chatgpt and key_to_use:
+            try:
+                logger.info("ChatGPT詳細アドバイス生成開始")
+                enhanced_advice = self._generate_enhanced_advice(
+                    analysis_data, basic_advice, user_concerns)
+                logger.info(f"ChatGPT詳細アドバイス生成完了 - Enhanced: {enhanced_advice.get('enhanced', False)}")
+                return enhanced_advice
+            except Exception as e:
+                logger.error(f"ChatGPT API呼び出しエラー: {e}")
+                basic_advice["enhanced"] = False
+                basic_advice["error"] = f"ChatGPT接続エラー: {str(e)}"
+                if user_concerns:
+                    basic_advice['one_point_advice'] = self._generate_basic_one_point_advice(user_concerns)
+                return basic_advice
+        else:
+            logger.warning("APIキーが空なので詳細アドバイスは生成されません。")
             if user_concerns:
                 basic_advice['one_point_advice'] = self._generate_basic_one_point_advice(user_concerns)
+            basic_advice['error'] = 'APIキーが無いため詳細解説は出力できません。'
             return basic_advice
-    else:
-        logger.warning("APIキーが空なので詳細アドバイスは生成されません。")
-        if user_concerns:
-            basic_advice['one_point_advice'] = self._generate_basic_one_point_advice(user_concerns)
-        basic_advice['error'] = 'APIキーが無いため詳細解説は出力できません。'
-        return basic_advice
 
 
     def _generate_basic_advice(self, analysis_data: Dict) -> Dict:
