@@ -2,6 +2,7 @@
 テニスサービス動作解析 - アドバイス生成サービス（APIキー自動判定・安定完全版）
 """
 
+import os
 import logging
 from typing import Dict, List, Optional
 import json
@@ -9,14 +10,15 @@ import json
 logger = logging.getLogger(__name__)
 
 class AdviceGenerator:
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self):
         """
         アドバイス生成器の初期化
         """
-        self.api_key = api_key
+        # ★ APIキーは環境変数からのみ取得
+        self.api_key = os.environ.get("OPENAI_API_KEY")
         self.client = None
-        if api_key:
-            self._init_openai_client(api_key)
+        if self.api_key:
+            self._init_openai_client(self.api_key)
 
     def _init_openai_client(self, api_key: str):
         try:
@@ -43,45 +45,38 @@ class AdviceGenerator:
         """
         解析データに基づいてアドバイスを生成
         """
+    # --- APIキー自動吸収：引数→インスタンス→環境変数 ---
+    key_to_use = api_key or self.api_key or os.environ.get("OPENAI_API_KEY")
+    if not self.client and key_to_use:
+        self._init_openai_client(key_to_use)
+    if use_chatgpt is None:
+        use_chatgpt = bool(key_to_use)
 
-        # 1. APIキー自動吸収
-        key_to_use = api_key or self.api_key
-        if not self.client and key_to_use:
-            self._init_openai_client(key_to_use)
+    logger.info(f"アドバイス生成開始 - ChatGPT使用: {use_chatgpt}, APIキー: {'あり' if key_to_use else 'なし'}, 気になること: {bool(user_concerns)}")
 
-        # 2. use_chatgpt自動判定
-        if use_chatgpt is None:
-            use_chatgpt = bool(key_to_use)
+    basic_advice = self._generate_basic_advice(analysis_data)
 
-        logger.info(
-            f"アドバイス生成開始 - ChatGPT使用: {use_chatgpt}, APIキー: {'あり' if key_to_use else 'なし'}, 気になること: {bool(user_concerns)}"
-        )
-        print(f"★★use_chatgpt={use_chatgpt}, api_keyあり={bool(key_to_use)}")
-
-        # 3. 基本アドバイス生成
-        basic_advice = self._generate_basic_advice(analysis_data)
-
-        # 4. ChatGPTによる詳細アドバイス生成（APIキー必須）
-        if use_chatgpt and key_to_use:
-            try:
-                logger.info("ChatGPT詳細アドバイス生成開始")
-                enhanced_advice = self._generate_enhanced_advice(
-                    analysis_data, basic_advice, user_concerns)
-                logger.info(f"ChatGPT詳細アドバイス生成完了 - Enhanced: {enhanced_advice.get('enhanced', False)}")
-                return enhanced_advice
-            except Exception as e:
-                logger.error(f"ChatGPT API呼び出しエラー: {e}")
-                basic_advice["enhanced"] = False
-                basic_advice["error"] = f"ChatGPT接続エラー: {str(e)}"
-                if user_concerns:
-                    basic_advice['one_point_advice'] = self._generate_basic_one_point_advice(user_concerns)
-                return basic_advice
-        else:
-            logger.warning("APIキーが空なので詳細アドバイスは生成されません。")
+    if use_chatgpt and key_to_use:
+        try:
+            logger.info("ChatGPT詳細アドバイス生成開始")
+            enhanced_advice = self._generate_enhanced_advice(
+                analysis_data, basic_advice, user_concerns)
+            logger.info(f"ChatGPT詳細アドバイス生成完了 - Enhanced: {enhanced_advice.get('enhanced', False)}")
+            return enhanced_advice
+        except Exception as e:
+            logger.error(f"ChatGPT API呼び出しエラー: {e}")
+            basic_advice["enhanced"] = False
+            basic_advice["error"] = f"ChatGPT接続エラー: {str(e)}"
             if user_concerns:
                 basic_advice['one_point_advice'] = self._generate_basic_one_point_advice(user_concerns)
-            basic_advice['error'] = 'APIキーが無いため詳細解説は出力できません。'
             return basic_advice
+    else:
+        logger.warning("APIキーが空なので詳細アドバイスは生成されません。")
+        if user_concerns:
+            basic_advice['one_point_advice'] = self._generate_basic_one_point_advice(user_concerns)
+        basic_advice['error'] = 'APIキーが無いため詳細解説は出力できません。'
+        return basic_advice
+
 
     def _generate_basic_advice(self, analysis_data: Dict) -> Dict:
         """基本的なアドバイスを生成"""

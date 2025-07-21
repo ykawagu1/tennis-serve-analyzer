@@ -173,17 +173,20 @@ def analyze_video():
         tiered_evaluation = motion_analyzer.calculate_tiered_overall_score(analysis_result)
         analysis_result['tiered_evaluation'] = tiered_evaluation
 
-        # (9) アドバイス生成
+       # (9) アドバイス生成パート
         api_key = request.form.get("api_key", "")
         user_concerns = request.form.get("user_concerns", "")
+        is_premium = request.form.get("is_premium", "false") == "true"   # ★ここを追加
+
         print(f"★★受け取ったapi_key = {api_key}")
         print(f"★★受け取ったuser_concerns = {user_concerns}")
+        print(f"★★受け取ったis_premium = {is_premium}")
 
-        advice_generator = AdviceGenerator(api_key=api_key)
         advice = advice_generator.generate_advice(
             analysis_result,
             user_concerns=user_concerns,
-            user_level="intermediate"
+            user_level="intermediate",
+            use_chatgpt=is_premium  # ← これが重要！
         )
 
             # use_chatgpt, api_keyは省略でOK
