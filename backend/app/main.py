@@ -187,7 +187,6 @@ def analyze_video():
         )
 
             # use_chatgpt, api_keyは省略でOK
-        )
         analysis_result['advice'] = advice
 
 
