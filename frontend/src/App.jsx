@@ -249,8 +249,110 @@ function App() {
         </div>
       )}
 
-      {/* --- ここから先はファイル選択・設定・解析・結果など、既存UIを追加してください --- */}
-      {/* ... */}
+     {currentStep === 1 && (
+      <div className="max-w-2xl mx-auto">
+        <div className="unified-card">
+          <div className="unified-card-header">
+            <Upload className="upload-icon" />
+            <h2 className="unified-title">動画をアップロード</h2>
+          </div>
+          <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            className="upload-area"
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              border: "2px dashed #aaa",
+              borderRadius: "12px",
+              padding: "36px",
+              textAlign: "center",
+              cursor: "pointer",
+              background: "#f8fafc",
+            }}
+          >
+            <p className="upload-main-text">
+              ここに動画ファイルをドラッグ&ドロップ
+            </p>
+            <p className="upload-sub-text">
+              または、クリックしてファイルを選択
+            </p>
+            <p className="upload-format-text">
+              対応形式: MP4, AVI, MOV, MKV (最大100MB)
+            </p>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="video/*"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+        </div>
+      </div>
+    )}
+     {/* 2画面目：解析設定 */}
+    {currentStep === 2 && (
+      <div className="max-w-2xl mx-auto">
+        <div className="unified-card">
+          <h2 className="unified-title">解析設定</h2>
+          {/* 有料時だけ表示 */}
+          {isPremium && (
+            <div style={{ margin: 8 }}>
+              <label>
+                気になること（任意）:
+                <input
+                  type="text"
+                  value={userConcerns}
+                  onChange={e => setUserConcerns(e.target.value)}
+                  style={{ marginLeft: 8, width: 200 }}
+                />
+              </label>
+            </div>
+          )}
+          <div style={{ margin: 16 }}>
+            <button onClick={handleAnalyze} disabled={isAnalyzing}>
+              {isAnalyzing ? "解析中..." : "解析開始"}
+            </button>
+            <button onClick={() => setCurrentStep(1)} style={{ marginLeft: 12 }}>
+              ← 戻る
+            </button>
+          </div>
+          {error && <div style={{ color: "red", margin: 8 }}>{error}</div>}
+        </div>
+      </div>
+    )}
+      {/* 解析中・解析完了画面 */}
+      {currentStep === 3 && (
+        <div className="max-w-2xl mx-auto">
+          <div className="unified-card">
+            {isAnalyzing ? (
+              <div>
+                <Loader2 className="animate-spin" />
+                <p>解析中です。しばらくお待ちください…</p>
+                <div>進捗: {uploadProgress}%</div>
+              </div>
+            ) : analysisResult ? (
+              <div>
+                <CheckCircle className="text-green-600" />
+                <h2 className="unified-title">解析完了！</h2>
+                {/* 解析結果の要約など表示 */}
+                <pre style={{ background: "#f9f9f9", padding: 12, borderRadius: 8, fontSize: 14 }}>
+                  {JSON.stringify(analysisResult, null, 2)}
+                </pre>
+                <button onClick={() => setCurrentStep(1)} style={{ marginTop: 14 }}>
+                  ← 最初に戻る
+                </button>
+              </div>
+            ) : (
+              <div>
+                <AlertCircle className="text-red-600" />
+                <p>解析結果がありません。</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

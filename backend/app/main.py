@@ -181,7 +181,8 @@ def analyze_video():
         print(f"★★受け取ったapi_key = {api_key}")
         print(f"★★受け取ったuser_concerns = {user_concerns}")
         print(f"★★受け取ったis_premium = {is_premium}")
-
+        
+        advice_generator = AdviceGenerator()  # ←★これを追加！
         advice = advice_generator.generate_advice(
             analysis_result,
             user_concerns=user_concerns,
