@@ -1,5 +1,5 @@
 """
-テニスサービス動作解析 - アドバイス生成サービス（APIキー自動判定・完全修正版）
+テニスサービス動作解析 - アドバイス生成サービス（APIキー自動判定・安定完全版）
 """
 
 import logging
@@ -16,75 +16,72 @@ class AdviceGenerator:
         self.api_key = api_key
         self.client = None
         if api_key:
+            self._init_openai_client(api_key)
+
+    def _init_openai_client(self, api_key: str):
+        try:
+            from openai import OpenAI
+            self.client = OpenAI(api_key=api_key)
+            logger.info("OpenAI クライアント初期化成功（v1.0+）")
+        except ImportError:
             try:
-                from openai import OpenAI
-                self.client = OpenAI(api_key=api_key)
-                logger.info("OpenAI クライアント初期化成功（v1.0+）")
+                import openai
+                openai.api_key = api_key
+                logger.info("OpenAI API キー設定成功（v0.x）")
             except ImportError:
-                try:
-                    import openai
-                    openai.api_key = api_key
-                    logger.info("OpenAI API キー設定成功（v0.x）")
-                except ImportError:
-                    logger.error("OpenAI ライブラリがインストールされていません")
+                logger.error("OpenAI ライブラリがインストールされていません")
 
     def generate_advice(
         self,
         analysis_data: Dict,
         user_level: str = 'intermediate',
         focus_areas: List = None,
-        use_chatgpt: Optional[bool] = None,  # ←デフォルトNoneで自動判定！
+        use_chatgpt: Optional[bool] = None,
         api_key: str = '',
         user_concerns: str = ''
     ) -> Dict:
         """
         解析データに基づいてアドバイスを生成
         """
-        try:
-            # ★APIキーが入っていたら自動でuse_chatgpt=True
-            if use_chatgpt is None:
-                use_chatgpt = bool(api_key or self.api_key)
 
-            logger.info(
-                f"アドバイス生成開始 - ChatGPT使用: {use_chatgpt}, "
-                f"APIキー: {'あり' if (api_key or self.api_key) else 'なし'}, "
-                f"気になること: {bool(user_concerns)}"
-            )
+        # 1. APIキー自動吸収
+        key_to_use = api_key or self.api_key
+        if not self.client and key_to_use:
+            self._init_openai_client(key_to_use)
 
-            # デバッグ用ログ
-            print(f"🔍 DEBUG: analysis_data = {analysis_data}")
-            logger.info(f"🔍 DEBUG: analysis_data = {analysis_data}")
+        # 2. use_chatgpt自動判定
+        if use_chatgpt is None:
+            use_chatgpt = bool(key_to_use)
 
-            # APIキーの設定（引数で渡された場合は優先）
-            if api_key and not self.api_key:
-                self.api_key = api_key
-                try:
-                    from openai import OpenAI
-                    self.client = OpenAI(api_key=api_key)
-                except ImportError:
-                    import openai
-                    openai.api_key = api_key
+        logger.info(
+            f"アドバイス生成開始 - ChatGPT使用: {use_chatgpt}, APIキー: {'あり' if key_to_use else 'なし'}, 気になること: {bool(user_concerns)}"
+        )
+        print(f"★★use_chatgpt={use_chatgpt}, api_keyあり={bool(key_to_use)}")
 
-            # 基本アドバイス生成
-            basic_advice = self._generate_basic_advice(analysis_data)
+        # 3. 基本アドバイス生成
+        basic_advice = self._generate_basic_advice(analysis_data)
 
-            if use_chatgpt and (self.api_key or api_key):
-                logger.info("ChatGPT詳細アドバイス生成を開始")
+        # 4. ChatGPTによる詳細アドバイス生成（APIキー必須）
+        if use_chatgpt and key_to_use:
+            try:
+                logger.info("ChatGPT詳細アドバイス生成開始")
                 enhanced_advice = self._generate_enhanced_advice(
                     analysis_data, basic_advice, user_concerns)
-                logger.info(
-                    f"ChatGPT詳細アドバイス生成完了 - Enhanced: {enhanced_advice.get('enhanced', False)}"
-                )
+                logger.info(f"ChatGPT詳細アドバイス生成完了 - Enhanced: {enhanced_advice.get('enhanced', False)}")
                 return enhanced_advice
-            else:
-                logger.info("基本アドバイスのみ生成")
+            except Exception as e:
+                logger.error(f"ChatGPT API呼び出しエラー: {e}")
+                basic_advice["enhanced"] = False
+                basic_advice["error"] = f"ChatGPT接続エラー: {str(e)}"
                 if user_concerns:
                     basic_advice['one_point_advice'] = self._generate_basic_one_point_advice(user_concerns)
                 return basic_advice
-
-        except Exception as e:
-            logger.error(f"アドバイス生成エラー: {e}")
-            return self._generate_fallback_advice()
+        else:
+            logger.warning("APIキーが空なので詳細アドバイスは生成されません。")
+            if user_concerns:
+                basic_advice['one_point_advice'] = self._generate_basic_one_point_advice(user_concerns)
+            basic_advice['error'] = 'APIキーが無いため詳細解説は出力できません。'
+            return basic_advice
 
     def _generate_basic_advice(self, analysis_data: Dict) -> Dict:
         """基本的なアドバイスを生成"""
@@ -141,45 +138,35 @@ class AdviceGenerator:
 
     def _generate_enhanced_advice(self, analysis_data: Dict, basic_advice: Dict, user_concerns: str = '') -> Dict:
         """ChatGPT APIを使用して詳細なアドバイスを生成"""
-        try:
-            logger.info("ChatGPT API呼び出し開始")
-            total_score = analysis_data.get('total_score', 0)
-            phase_analysis = analysis_data.get('phase_analysis', {})
+        total_score = analysis_data.get('total_score', 0)
+        phase_analysis = analysis_data.get('phase_analysis', {})
 
-            # 詳細プロンプト作成
-            prompt = self._create_detailed_prompt(total_score, phase_analysis, basic_advice, user_concerns)
-            ai_response = self._call_chatgpt_api(prompt)
-            if ai_response:
-                logger.info("ChatGPT API呼び出し成功")
-                enhanced_advice = self._parse_ai_response(ai_response, basic_advice)
-                enhanced_advice["enhanced"] = True
-                enhanced_advice["detailed_advice"] = ai_response
-                if user_concerns:
-                    enhanced_advice["one_point_advice"] = self._extract_one_point_advice(ai_response, user_concerns)
-                return enhanced_advice
-            else:
-                logger.error("ChatGPT APIからの応答が空です")
-                basic_advice["enhanced"] = False
-                basic_advice["error"] = "ChatGPT APIからの応答が空でした"
-                return basic_advice
-        except Exception as e:
-            logger.error(f"ChatGPT API呼び出しエラー: {e}")
-            basic_advice["enhanced"] = False
-            basic_advice["error"] = f"ChatGPT接続エラー: {str(e)}"
+        # 詳細プロンプト作成
+        prompt = self._create_detailed_prompt(total_score, phase_analysis, basic_advice, user_concerns)
+        ai_response = self._call_chatgpt_api(prompt)
+        if ai_response:
+            logger.info("ChatGPT API呼び出し成功")
+            enhanced_advice = self._parse_ai_response(ai_response, basic_advice)
+            enhanced_advice["enhanced"] = True
+            enhanced_advice["detailed_advice"] = ai_response
             if user_concerns:
-                basic_advice['one_point_advice'] = self._generate_basic_one_point_advice(user_concerns)
+                enhanced_advice["one_point_advice"] = self._extract_one_point_advice(ai_response, user_concerns)
+            return enhanced_advice
+        else:
+            logger.error("ChatGPT APIからの応答が空です")
+            basic_advice["enhanced"] = False
+            basic_advice["error"] = "ChatGPT APIからの応答が空でした"
             return basic_advice
 
     def _call_chatgpt_api(self, prompt: str) -> str:
         """ChatGPT APIを呼び出し"""
         try:
             if self.client:
-                # OpenAI v1.0+ API
                 logger.info("OpenAI v1.0+ APIを使用")
                 response = self.client.chat.completions.create(
                     model="gpt-4.1-nano",
                     messages=[
-                        {"role": "system", "content": "...（プロコーチ設定省略: 以前通りでOK）..."},
+                        {"role": "system", "content": """あなたは30年以上の経験を持つATP/WTAツアーのプロテニスコーチ...（省略）...""" },
                         {"role": "user", "content": prompt}
                     ],
                     max_tokens=3000,
@@ -187,13 +174,12 @@ class AdviceGenerator:
                 )
                 return response.choices[0].message.content
             else:
-                # OpenAI v0.x API
                 logger.info("OpenAI v0.x APIを使用")
                 import openai
                 response = openai.ChatCompletion.create(
                     model="gpt-4.1-nano",
                     messages=[
-                        {"role": "system", "content": "...（プロコーチ設定省略: 以前通りでOK）..."},
+                        {"role": "system", "content": """あなたは30年以上の経験を持つATP/WTAツアーのプロテニスコーチ...（省略）...""" },
                         {"role": "user", "content": prompt}
                     ],
                     max_tokens=3000,
