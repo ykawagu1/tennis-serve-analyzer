@@ -15,7 +15,7 @@ class PoseDetector:
     """MediaPipeを使用したポーズ検出クラス"""
 
     def __init__(self, 
-                 model_complexity: int = 0,  # 最軽量化（元々は1）
+                 model_complexity: int = 1,  # 最軽量化（元々は1）
                  min_detection_confidence: float = 0.4,
                  min_tracking_confidence: float = 0.4):
         """
@@ -53,7 +53,7 @@ class PoseDetector:
             'left_foot_index': 31, 'right_foot_index': 32
         }
 
-    def detect_poses(self, video_path: str, output_dir: str, skip_frames: int = 8, resize_dim=(640, 360)) -> List[Dict]:
+    def detect_poses(self, video_path: str, output_dir: str, skip_frames: int = 6, resize_dim=(640, 360)) -> List[Dict]:
         """
         動画からポーズを検出（main.pyから呼び出されるメインメソッド）
 
@@ -121,7 +121,7 @@ class PoseDetector:
 
         return pose_data
 
-    def process_video(self, video_path: str, skip_frames: int = 8, resize_dim=(640, 360)) -> List[Dict]:
+    def process_video(self, video_path: str, skip_frames: int = 6, resize_dim=(640, 360)) -> List[Dict]:
         """
         動画全体のポーズ検出処理
         """
@@ -282,8 +282,8 @@ def main():
     output_dir = "output"
     if os.path.exists(test_video):
         os.makedirs(output_dir, exist_ok=True)
-        # 高速化指定！skip_frames=8, resize_dim=(640,360)
-        pose_results = detector.detect_poses(test_video, output_dir, skip_frames=8, resize_dim=(640,360))
+        # 高速化指定！skip_frames=6, resize_dim=(640,360)
+        pose_results = detector.detect_poses(test_video, output_dir, skip_frames=6, resize_dim=(640,360))
         stats = detector.get_pose_statistics(pose_results)
         print("統計情報:", json.dumps(stats, indent=2, ensure_ascii=False))
     else:
