@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import {
-  Upload, Play, BarChart3, Loader2, CheckCircle, AlertCircle, Sparkles, Settings,
-  Eye, EyeOff, ChevronDown, ChevronUp, Trophy, Target, Users, BookOpen,
-  Calendar, Brain, MessageCircle, Camera, Zap, Share2
+  Upload, Loader2, CheckCircle, AlertCircle
 } from "lucide-react";
 import "./App.css";
 
@@ -27,7 +25,6 @@ function App() {
   // --- モーダル/ガイド/各種ステート ---
   const [showGuide, setShowGuide] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
 
   // --- 解析用の各種ステート ---
   const [selectedFile, setSelectedFile] = useState(null);
@@ -249,79 +246,80 @@ function App() {
         </div>
       )}
 
-     {currentStep === 1 && (
-      <div className="max-w-2xl mx-auto">
-        <div className="unified-card">
-          <div className="unified-card-header">
-            <Upload className="upload-icon" />
-            <h2 className="unified-title">動画をアップロード</h2>
-          </div>
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            className="upload-area"
-            onClick={() => fileInputRef.current?.click()}
-            style={{
-              border: "2px dashed #aaa",
-              borderRadius: "12px",
-              padding: "36px",
-              textAlign: "center",
-              cursor: "pointer",
-              background: "#f8fafc",
-            }}
-          >
-            <p className="upload-main-text">
-              ここに動画ファイルをドラッグ&ドロップ
-            </p>
-            <p className="upload-sub-text">
-              または、クリックしてファイルを選択
-            </p>
-            <p className="upload-format-text">
-              対応形式: MP4, AVI, MOV, MKV (最大100MB)
-            </p>
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="video/*"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-        </div>
-      </div>
-    )}
-     {/* 2画面目：解析設定 */}
-    {currentStep === 2 && (
-      <div className="max-w-2xl mx-auto">
-        <div className="unified-card">
-          <h2 className="unified-title">解析設定</h2>
-          {/* 有料時だけ表示 */}
-          {isPremium && (
-            <div style={{ margin: 8 }}>
-              <label>
-                気になること（任意）:
-                <input
-                  type="text"
-                  value={userConcerns}
-                  onChange={e => setUserConcerns(e.target.value)}
-                  style={{ marginLeft: 8, width: 200 }}
-                />
-              </label>
+      {/* 1画面目：動画アップロード */}
+      {currentStep === 1 && (
+        <div className="max-w-2xl mx-auto">
+          <div className="unified-card">
+            <div className="unified-card-header">
+              <Upload className="upload-icon" />
+              <h2 className="unified-title">動画をアップロード</h2>
             </div>
-          )}
-          <div style={{ margin: 16 }}>
-            <button onClick={handleAnalyze} disabled={isAnalyzing}>
-              {isAnalyzing ? "解析中..." : "解析開始"}
-            </button>
-            <button onClick={() => setCurrentStep(1)} style={{ marginLeft: 12 }}>
-              ← 戻る
-            </button>
+            <div
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              className="upload-area"
+              onClick={() => fileInputRef.current?.click()}
+              style={{
+                border: "2px dashed #aaa",
+                borderRadius: "12px",
+                padding: "36px",
+                textAlign: "center",
+                cursor: "pointer",
+                background: "#f8fafc",
+              }}
+            >
+              <p className="upload-main-text">
+                ここに動画ファイルをドラッグ&ドロップ
+              </p>
+              <p className="upload-sub-text">
+                または、クリックしてファイルを選択
+              </p>
+              <p className="upload-format-text">
+                対応形式: MP4, AVI, MOV, MKV (最大100MB)
+              </p>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="video/*"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
           </div>
-          {error && <div style={{ color: "red", margin: 8 }}>{error}</div>}
         </div>
-      </div>
-    )}
-      {/* 解析中・解析完了画面 */}
+      )}
+      {/* 2画面目：解析設定 */}
+      {currentStep === 2 && (
+        <div className="max-w-2xl mx-auto">
+          <div className="unified-card">
+            <h2 className="unified-title">解析設定</h2>
+            {/* 有料時だけ表示 */}
+            {isPremium && (
+              <div style={{ margin: 8 }}>
+                <label>
+                  気になること（任意）:
+                  <input
+                    type="text"
+                    value={userConcerns}
+                    onChange={e => setUserConcerns(e.target.value)}
+                    style={{ marginLeft: 8, width: 200 }}
+                  />
+                </label>
+              </div>
+            )}
+            <div style={{ margin: 16 }}>
+              <button onClick={handleAnalyze} disabled={isAnalyzing}>
+                {isAnalyzing ? "解析中..." : "解析開始"}
+              </button>
+              <button onClick={() => setCurrentStep(1)} style={{ marginLeft: 12 }}>
+                ← 戻る
+              </button>
+            </div>
+            {error && <div style={{ color: "red", margin: 8 }}>{error}</div>}
+          </div>
+        </div>
+      )}
+      {/* 3画面目：解析完了 */}
       {currentStep === 3 && (
         <div className="max-w-2xl mx-auto">
           <div className="unified-card">
@@ -335,8 +333,90 @@ function App() {
               <div>
                 <CheckCircle className="text-green-600" />
                 <h2 className="unified-title">解析完了！</h2>
-                {/* 解析結果の要約など表示 */}
-                <pre style={{ background: "#f9f9f9", padding: 12, borderRadius: 8, fontSize: 14 }}>
+                {/* トータルスコアカード */}
+                {analysisResult && (
+                  <div style={{
+                    maxWidth: 340,
+                    margin: "24px auto 16px",
+                    background: "#23264d",
+                    color: "#fff",
+                    borderRadius: 18,
+                    boxShadow: "0 4px 12px #23264d33",
+                    padding: 24,
+                    textAlign: "center"
+                  }}>
+                    <div style={{ fontSize: 20, fontWeight: 600, marginBottom: 4, letterSpacing: 2 }}>
+                      総合スコア
+                    </div>
+                    <div style={{ fontSize: 60, fontWeight: 700, lineHeight: 1, margin: "0 0 8px 0", letterSpacing: 2 }}>
+                      {analysisResult.tiered_evaluation?.total_score?.toFixed(2) ?? analysisResult.overall_score?.toFixed(2) ?? "--"}
+                    </div>
+                    <div style={{
+                      fontSize: 18,
+                      fontWeight: 500,
+                      color: "#ffd700",
+                      marginBottom: 2
+                    }}>
+                      {analysisResult.tiered_evaluation?.skill_level_name || "レベル不明"}
+                    </div>
+                  </div>
+                )}
+                {/* フェーズ別スコアカード群 */}
+                {analysisResult?.phase_analysis && (
+                  <div style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 12,
+                    justifyContent: "center",
+                    marginBottom: 18
+                  }}>
+                    {Object.entries(analysisResult.phase_analysis).map(([phase, value]) => (
+                      <div key={phase} style={{
+                        background: "#fff",
+                        borderRadius: 14,
+                        minWidth: 150,
+                        padding: 14,
+                        margin: "0 4px",
+                        boxShadow: "0 2px 8px #23264d19",
+                        border: "2px solid #e4e8fc",
+                        textAlign: "center"
+                      }}>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: "#23264d", marginBottom: 4 }}>
+                          {phase.replace("_", " ").toUpperCase()}
+                        </div>
+                        <div style={{ fontSize: 28, fontWeight: 700, color: "#2846a1" }}>
+                          {value.score?.toFixed(1) ?? "--"}
+                        </div>
+                        <div style={{ fontSize: 13, color: "#777", marginTop: 2 }}>
+                          {value.feedback || ""}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {/* オーバーレイ画像（縦並び） */}
+                {analysisResult.overlay_images && analysisResult.overlay_images.length > 0 && (
+                  <div>
+                    <h3 style={{ fontWeight: "bold", margin: "14px 0 6px" }}>静止ポーズ画像（オーバーレイ）</h3>
+                    <div style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                      alignItems: "center"
+                    }}>
+                      {analysisResult.overlay_images.map((img, idx) => (
+                        <img
+                          key={idx}
+                          src={API_BASE_URL + img}
+                          alt={`Pose Overlay ${idx + 1}`}
+                          style={{ width: 140, borderRadius: 8, border: "1px solid #ddd" }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* アドバイスなどはお好みで追加 */}
+                <pre style={{ background: "#f9f9f9", padding: 12, borderRadius: 8, fontSize: 14, marginTop: 12 }}>
                   {JSON.stringify(analysisResult, null, 2)}
                 </pre>
                 <button onClick={() => setCurrentStep(1)} style={{ marginTop: 14 }}>
@@ -352,7 +432,6 @@ function App() {
           </div>
         </div>
       )}
-
     </div>
   );
 }
