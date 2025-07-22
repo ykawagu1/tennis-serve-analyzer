@@ -19,7 +19,7 @@ function App() {
     localStorage.getItem("usageDate") || new Date().toLocaleDateString()
   );
   const FREE_LIMIT = 3;
-  const PREMIUM_LIMIT = 8;
+  const PREMIUM_LIMIT = 200;
   const USAGE_LIMIT = isPremium ? PREMIUM_LIMIT : FREE_LIMIT;
 
   // --- モーダル/ガイド/各種ステート ---
@@ -99,6 +99,9 @@ function App() {
 
       if (response.data.success) {
         setAnalysisResult(response.data.result);
+
+        console.log("API RESULT", response.data.result);
+
         setCurrentStep(3);
         // 利用回数を加算
         const today = new Date().toLocaleDateString();
@@ -110,10 +113,12 @@ function App() {
         throw new Error(response.data.error || "解析に失敗しました");
       }
     } catch (err) {
+      console.error("API ERROR", err);
+
       setError(
         err.response?.data?.error ||
-          err.message ||
-          "解析中にエラーが発生しました"
+        err.message ||
+        "解析中にエラーが発生しました"
       );
     } finally {
       setIsAnalyzing(false);
@@ -170,9 +175,8 @@ function App() {
             setIsPremium(!isPremium);
             localStorage.setItem("isPremium", (!isPremium).toString());
           }}
-          className={`${
-            isPremium ? "bg-yellow-400" : "bg-gray-200"
-          } text-sm px-3 py-1 rounded-lg font-bold`}
+          className={`${isPremium ? "bg-yellow-400" : "bg-gray-200"
+            } text-sm px-3 py-1 rounded-lg font-bold`}
         >
           {isPremium ? "有料モード (課金ユーザー)" : "無料モード (ゲストユーザー)"}
         </button>
@@ -415,10 +419,29 @@ function App() {
                     </div>
                   </div>
                 )}
-                {/* アドバイスなどはお好みで追加 */}
-                <pre style={{ background: "#f9f9f9", padding: 12, borderRadius: 8, fontSize: 14, marginTop: 12 }}>
-                  {JSON.stringify(analysisResult, null, 2)}
-                </pre>
+                {/* --- AIによる詳細アドバイス表示 --- */}
+                {analysisResult?.advice?.enhanced && analysisResult?.advice?.enhanced_advice && (
+                  <div
+                    style={{
+                      margin: "26px 0 18px",
+                      background: "#e7f5ff",
+                      border: "2px solid #2f89fc",
+                      borderRadius: 12,
+                      padding: "16px 20px",
+                      color: "#163878",
+                      fontSize: 16,
+                      fontWeight: 500,
+                      boxShadow: "0 2px 8px #bbb2",
+                    }}
+                  >
+                    <div style={{ fontWeight: "bold", fontSize: 17, marginBottom: 6 }}>
+                      AIによる詳細アドバイス
+                    </div>
+                    <div style={{ whiteSpace: "pre-line" }}>
+                      {analysisResult.advice.enhanced_advice}
+                    </div>
+                  </div>
+                )}
                 <button onClick={() => setCurrentStep(1)} style={{ marginTop: 14 }}>
                   ← 最初に戻る
                 </button>

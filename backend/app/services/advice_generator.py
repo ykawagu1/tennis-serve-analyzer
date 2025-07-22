@@ -144,6 +144,7 @@ class AdviceGenerator:
             enhanced_advice = self._parse_ai_response(ai_response, basic_advice)
             enhanced_advice["enhanced"] = True
             enhanced_advice["detailed_advice"] = ai_response
+            enhanced_advice["enhanced_advice"] = ai_response   # ←★ここを追加！
             if user_concerns:
                 enhanced_advice["one_point_advice"] = self._extract_one_point_advice(ai_response, user_concerns)
             return enhanced_advice
