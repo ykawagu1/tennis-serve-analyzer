@@ -32,6 +32,11 @@ app = Flask(
 )
 CORS(app)
 
+@app.route("/")
+def index():
+    return app.send_static_file("index.html")
+
+
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'static/output'
 ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
