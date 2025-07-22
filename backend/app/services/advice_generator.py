@@ -175,7 +175,7 @@ class AdviceGenerator:
                 response = openai.ChatCompletion.create(
                     model="gpt-4.1-nano",
                     messages=[
-                        {"role": "system", "content": """あなたは30年以上の経験を持つATP/WTAツアーのプロテニスコーチ...（省略）...""" },
+                        {"role": "system", "content": """あなたは30年以上の経験を持つATP/WTAツアーのプロテニスコーチです。下記「ユーザーの具体的な悩み」に、必ず明確かつ具体的に答えてください。""" },
                         {"role": "user", "content": prompt}
                     ],
                     max_tokens=3000,
@@ -197,7 +197,7 @@ class AdviceGenerator:
                 weak_phases.append(phase)
         concerns_text = ""
         if user_concerns:
-            concerns_text = f"\n\n【ユーザーの具体的な悩み】\n{user_concerns}\n\n上記の悩みに特に焦点を当てて、具体的で実践的なアドバイスを含めてください。この悩みに対して、以下のアドバイス各項目で必ず具体的な解決策や実践例を盛り込んでください。"
+            concerns_text = f"\n\n【ユーザーの具体的な悩み】\n{user_concerns}\n\n上記の悩みに特に焦点を当てて、具体的で実践的なアドバイスを含めてください。"
         prompt = f"""
 【テニスサーブ動作解析結果】
 
@@ -221,6 +221,9 @@ class AdviceGenerator:
 5. ワンポイントアドバイス（200文字程度）
 
 特に改善が必要なフェーズ（{', '.join(weak_phases)}）に重点を置いて、具体的で実践的なアドバイスをお願いします。
+【アドバイス生成要件】
+・各項目で悩みに必ず言及し、一般論だけで済ませないこと。
+・悩みが曖昧でも「考えられる理由」と「改善案」を必ず入れること。
 """
         return prompt
 
