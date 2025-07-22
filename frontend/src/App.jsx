@@ -159,7 +159,7 @@ function App() {
       <header className="modern-header">
         <div className="header-container">
           <div className="header-brand">
-            <img src="/tossup-icon.png" alt="TossUp" className="header-logo" />
+            <img src="/static/tossup-icon.png" alt="TossUp" className="header-logo" />
             <div className="header-text">
               <h1 className="header-title">TossUp</h1>
               <p className="header-subtitle">Tennis Serve Analyzer</p>
