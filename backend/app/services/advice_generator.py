@@ -197,7 +197,7 @@ class AdviceGenerator:
                 weak_phases.append(phase)
         concerns_text = ""
         if user_concerns:
-            concerns_text = f"\n\n【ユーザーの具体的な悩み】\n{user_concerns}\n\n上記の悩みに特に焦点を当てて、具体的で実践的なアドバイスを含めてください。"
+            concerns_text = f"\n\n【ユーザーの具体的な悩み】\n{user_concerns}\n\n上記の悩みに特に焦点を当てて、具体的で実践的なアドバイスを含めてください。この悩みに対して、以下のアドバイス各項目で必ず具体的な解決策や実践例を盛り込んでください。"
         prompt = f"""
 【テニスサーブ動作解析結果】
 
