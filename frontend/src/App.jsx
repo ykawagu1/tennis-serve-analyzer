@@ -231,7 +231,7 @@ function App() {
       {showGuide && (
         <div className="modal-overlay" onClick={() => setShowGuide(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <img src="/camera_guide.png" alt="撮影ガイド" style={{ width: "90%", maxWidth: 400, marginBottom: 20 }} />
+            <img src="/static/camera_guide.png" alt="撮影ガイド" style={{ width: "90%", maxWidth: 400, marginBottom: 20 }} />
             <button
               onClick={() => setShowGuide(false)}
               style={{
