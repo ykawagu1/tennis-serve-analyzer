@@ -162,10 +162,10 @@ class AdviceGenerator:
                 response = self.client.chat.completions.create(
                     model="gpt-4.1-nano",
                     messages=[
-                        {"role": "system", "content": """あなたは30年以上の経験を持つATP/WTAツアーのプロテニスコーチ...（省略）...""" },
+                        {"role": "system", "content": """あなたは30年以上の経験を持つATP/WTAツアーのプロテニスコーチ下記「ユーザーの具体的な悩み」に、必ず明確かつ具体的に答えてください""" },
                         {"role": "user", "content": prompt}
                     ],
-                    max_tokens=3000,
+                    max_tokens=5000,
                     temperature=0.7
                 )
                 return response.choices[0].message.content
@@ -178,7 +178,7 @@ class AdviceGenerator:
                         {"role": "system", "content": """あなたは30年以上の経験を持つATP/WTAツアーのプロテニスコーチです。下記「ユーザーの具体的な悩み」に、必ず明確かつ具体的に答えてください。""" },
                         {"role": "user", "content": prompt}
                     ],
-                    max_tokens=3000,
+                    max_tokens=5000,
                     temperature=0.7
                 )
                 return response.choices[0].message.content
@@ -213,10 +213,10 @@ class AdviceGenerator:
 {concerns_text}
 
 この解析結果に基づいて、以下の構成で詳細なアドバイスを生成してください：
-
+なお（500文字程度）といった表現は絶対に表示しないでください。また箇条書きにして明確に記載してください。
 1. フォーム改善点の詳細分析（500文字程度）
-2. 4週間トレーニングプログラム（500文字程度）
-3. フィジカル強化メニュー（500文字程度）
+2. 4週間トレーニングプログラム（1000文字程度）
+3. フィジカル強化メニュー（1000文字程度）
 4. 実戦での確認ポイント（300文字程度）
 5. ワンポイントアドバイス（200文字程度）
 
@@ -224,6 +224,7 @@ class AdviceGenerator:
 【アドバイス生成要件】
 ・各項目で悩みに必ず言及し、一般論だけで済ませないこと。
 ・悩みが曖昧でも「考えられる理由」と「改善案」を必ず入れること。
+・直接、テニスに関係ない悩みにも、共感と改善案を必ず入れること。
 """
         return prompt
 
